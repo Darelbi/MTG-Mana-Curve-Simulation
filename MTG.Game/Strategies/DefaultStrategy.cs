@@ -332,7 +332,7 @@ namespace MTG.Game.Strategies
 
             // if no cards "by strategy" to play just sort by mana cost to play anyway something. Assuming bigger cost
             // is better card.. Bad Idea. If I start by lower cost I may benefit from affinity... Or no? StrategyVariable TODO:
-            if (cardsToPlay.Count == 0)
+            if (cardsToPlay.Count == 0) 
             {
                 if(StrategyVariables.PlayLeftOverCardsFromCheaper)
                     cardsToPlay = cardsInHand.Where(x => x.ManaCost != null).OrderBy(x => x.ManaCost.ConvertedManaValue()).ToList();
