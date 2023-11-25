@@ -128,7 +128,7 @@ In general this time out of 10 optimization attempts only
 is worth adding even in Affinity deck.
 
 
-** Both the first attempt and the second attempt have the sum of**
+**Both the first attempt and the second attempt have the sum of**
  - Sojorouners' companion
  - Thought monitor
  - Myr Enforcer
