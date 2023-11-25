@@ -75,7 +75,7 @@ apparently following a good strategy.
 Then the simulation is repeated 50000 times and statistics are collected.
 Now, there is no agreement to which statistics makes a deck better, one idea though
 is to count the average number of turns the decks takes to do 30 damage (yes it 
-simulate combat phase, keeping into account equipment power, */* creatures etc).
+simulate combat phase, keeping into account equipment power, x/x creatures etc).
 among 50000 games. I know the foe has 20 life, but we have to simulate in some 
 way there are defending creatures and this is a really reasonable way. 
 
@@ -123,5 +123,71 @@ in the try list, and keeps the deck with the better average winning turn try.
 Then repeat the process until there is no more improvement.
 This kind of stuff would require probably Hours to run
 
+## Taylor the Strategy
 
-## What the simulation does not (yet)
+Once you found the optimal deck, you can play around with StrategyVariables and see
+how the strategy plays (with that deck). The strategy variables should also gives
+hints at which behavior statistically pay you better during a real match. However 
+notes that a strategy works better with a deck, so by Tayloring your strategy 
+it is possible there is a better deck for that strategy, that means repeat The
+operation:
+
+TaylorDeck => Taylor strategy => Taylor Deck... etc.
+
+
+## What the simulation does not
+
+The simulation is without an opponent, so it cannot quantify the implicit value of
+having cards that apply some kind of effects on enemy creatures or some kind of 
+control, like milling or like Tormod's Crypt. Luckily the affinity deck is the kind
+of deck that want to play "power" and the simulation is especially good at that.
+
+There is no way the simulation will say is good having 4 Tormod's Crypt against a
+Graveyard deck even if it is an obvious benefit. 
+
+however you can put some place holders cards that do nothing, and quantify how
+much power do you lose for having extra utility cards in the deck.
+
+That's it, if you want to play Power mode, but have also utility cards, the Simulation
+will tell you how much do you lose in Power thanks to utility cards.
+
+Which may be a great advantage anyway.
+
+A remark, I created the code around the affinity deck. So if you want to simulate
+another kind of deck (i.e. a Green Aggro). You need to implement the missing cards
+AND implement a brand new `GreenAggroStrategy` class implementing `IStrategy`.
+Good Luck!
+
+## what is not implemented
+
+The deck was designed around blue/black/red affinity prototype, so it is missing
+green and white mana implementation. (for now)
+
+The deck is missing a real mana allocation strategy, which may matters for multi
+colored decks (actually the mana is spent in a greedy way, colored mana first).
+It is not a simple task doing a mana allocation strategy.
+
+## contributing
+
+You can contribute in any way you desider and I try to keep all usefull contributions
+
+I.E. You could implement a card (or also just request me to implement that)
+
+Refactorin is wellcome: I'm aware the code is not a good example of software engineering
+but I developed it in hurry, I left a lot of "TODO" in the code that are good starting
+points. But the improvements are not limited to TODOs.
+
+AS LONG AS UNIT TESTS PASSES.
+
+The code is heavily tested, I would never accept any change that breaks any unit tests.
+
+## unit tests
+
+Unit tests check that given some cards, those are played in a determined order, which
+basically verify the Strategy of card selection is working.
+
+The unit tests are important because says the code is working, there is no way you can
+check manually the outcome of 50000 games.
+
+Some tests verify the working of side effects by checking the total damage done or
+some cards are into play (i.e. Construct tokens from Urza's Saga)
