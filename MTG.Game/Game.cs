@@ -18,7 +18,7 @@ namespace MTG.Game
         private readonly List<Card> play;
         private readonly List<Card> grave;
         private readonly List<Card> playedCardsThisTurn;
-        private readonly int damageDealt;
+        private int damageDealt;
 
         private int turn;
         public Game(Grimoire grimoire, IStrategy strategy, bool meStarting)
@@ -91,7 +91,12 @@ namespace MTG.Game
 
         public bool HasWon()
         {
-            return damageDealt >= 20;
+            return damageDealt >= 30;
+        }
+
+        public int TotalDamageDealt()
+        {
+            return damageDealt;
         }
 
         public void Turn()
@@ -100,7 +105,7 @@ namespace MTG.Game
             playedCardsThisTurn.Clear();
 
             // begin turn phase
-            UntapPhase();
+            UntapPhase(); // TODO: lore counting is done after drawing.... does not matter for now.
             Draw();
 
             MainPhase();
@@ -131,7 +136,15 @@ namespace MTG.Game
 
         private void CombatPhase()
         {
+            // there are no foes. So we just assume all creatures are attacking. so we don't need really any strategy for that
+            var attacking = play.Where(x => x.Creature && x.Status_Tapped == false && GetCardPower(x) > 0);
 
+            foreach(var attack in attacking)
+            {
+                damageDealt += GetCardPower(attack);
+                if (attack.AttackWithoutTapping == false)
+                    attack.Status_Tapped = true;
+            }
         }
 
         private void MainPhase()

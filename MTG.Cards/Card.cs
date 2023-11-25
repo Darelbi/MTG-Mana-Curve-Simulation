@@ -60,5 +60,6 @@ namespace MTG.Cards
         /// </summary>
         public int PlusOnePlusOneTokens { get; set; }
         public bool Haste { get; set; }
+        public bool AttackWithoutTapping { get; set; }
     }
 }
