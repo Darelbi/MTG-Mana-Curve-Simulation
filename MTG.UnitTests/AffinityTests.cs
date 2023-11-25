@@ -98,5 +98,21 @@ namespace MTG.UnitTests
                 new Ornithopter(), new SpringleafDrum(), new SeatOfTheSynod(),
                 new Ornithopter(), new Ornithopter()));
         }
+
+        [TestMethod]
+        public void PlayFrogmitWithLotus()
+        {
+            var grimoire =
+            TestUtils.SetupDeck(new LotusPetal(),
+                                    new SeatOfTheSynod(),
+                                    new Frogmite());
+
+            var game = new Game.Game(grimoire, new DefaultStrategy(), true);
+            game.BeginTestGame(3);
+
+            // Turn 1
+            game.Turn();
+            Assert.IsTrue(game.PlayedCards(new Frogmite(), new SeatOfTheSynod(),new LotusPetal()));
+        }
     }
 }

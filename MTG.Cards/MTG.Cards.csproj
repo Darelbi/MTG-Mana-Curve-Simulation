@@ -10,8 +10,4 @@
     <ProjectReference Include="..\MTG.Mana\MTG.Mana.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Cards\Feats\Implementations\" />
-  </ItemGroup>
-
 </Project>
