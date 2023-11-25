@@ -2,8 +2,6 @@
 using MTG.Cards.Cards.Creatures;
 using MTG.Cards.Cards.Lands;
 using MTG.Game;
-using MTG.Game.Strategies;
-using MTG.Game.Utils;
 
 var starting = new Deck();
 var tryList = new Deck();

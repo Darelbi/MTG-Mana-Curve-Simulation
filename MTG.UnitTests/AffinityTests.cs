@@ -41,5 +41,36 @@ namespace MTG.UnitTests
             Assert.IsTrue(game.PlayedCards(new VaultOfWhispers()));
         }
 
+        [TestMethod]
+        public void ToughtMonitorDrawCards()
+        {
+            var grimoire =
+            TestUtils.SetupDeck(    new DarksteelCitadel(),
+                                    new SeatOfTheSynod(),
+                                    new ThoughtMonitor(),
+                                    new Ornithopter(),
+
+                                    new DarksteelCitadel(),
+                                    new Ornithopter(),
+                                    new Ornithopter(),
+                                    new Glimmervoid());
+
+            var game = new Game.Game(grimoire, new DefaultStrategy(), true);
+            game.BeginTestGame(4);
+
+            // Turn 1
+            game.Turn();
+            Assert.IsTrue(game.PlayedCards(new Ornithopter(), new SeatOfTheSynod()));
+
+            // Turn 2
+            game.Turn();
+            Assert.IsTrue(game.PlayedCards(new DarksteelCitadel()));
+
+            // Turn 3  // Found bug, lands are not played in this phase, but possibly should be played
+            game.Turn();
+            Assert.IsTrue(game.PlayedCards(new Ornithopter(), new DarksteelCitadel(), new ThoughtMonitor()
+                                        , new Ornithopter(), new Glimmervoid()));
+        }
+
     }
 }

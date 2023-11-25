@@ -4,7 +4,6 @@ using MTG.Cards.Cards.Feats;
 using MTG.Game.Utils;
 using MTG.Mana;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 
 namespace MTG.Game
 {
@@ -169,8 +168,9 @@ namespace MTG.Game
                 var selectedCostlyCards = strategy.SelectCardsToPlay(this);
                 foreach (var card in selectedCostlyCards)
                 {
-                    if (card.ManaCost == null || card.ManaCost.ConvertedManaValue() == 0)
-                        throw new System.Exception("Free cards should be played before this point");
+                    // THE CHECK IS STUPID BECAUSE AS A RESULT OF A CARD I CAN DRAW FREE CARDS AND PLAY THESE NOW
+                    //if (card.ManaCost == null || card.ManaCost.ConvertedManaValue() == 0)
+                    //    throw new System.Exception("Free cards should be played before this point");
 
                     if (TapMana(card.ManaCost, false, card, card.Affinity))
                     {
@@ -514,6 +514,13 @@ namespace MTG.Game
         public ReadOnlyCollection<Card> GetGrimoireCards()
         {
             return grimoire.GetAllCards();
+        }
+
+        public void DrawFromGame(Card soruce, int howmanycards)
+        {
+            var card = grimoire.DrawCard();
+            Console.WriteLine($"Drawed: {card.CardName}\n");
+            hand.Add(card);
         }
     }
 }

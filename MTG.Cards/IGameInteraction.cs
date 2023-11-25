@@ -12,6 +12,8 @@ namespace MTG.Cards
 
         ReadOnlyCollection<Card> GetGrimoireCards();
 
+        void DrawFromGame(Card soruce, int howmanycards);
+
         void Sacrifice(Card card);
 
         void PutCardInPlay(Card card);
