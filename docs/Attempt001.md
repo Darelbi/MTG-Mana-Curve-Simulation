@@ -1,55 +1,53 @@
-This is the first attempt at a optimization of deck
+This is the first optimization attempt, the AWT metrics stands for 
+Average Winning Turn, which means most games are won in 5 turns,
+some in 6:
 
 Starting Optimization: with initial deck
 
-4       x Ornithopter
-4       x Memnite
-4       x Myr Enforcer
-4       x Master of Etherium
-4       x Frogmite
-4       x Cranial Plating
-4       x Springleaf Drum
-4       x Urza's Saga
-1       x Sol Ring
-3       x Thought Monitor
-4       x Sojourner's Companion
-4       x Vault of Whispers
-4       x Mistvault Bridge
-4       x Seat of the Synod
-4       x Darksteel Citadel
-4       x Glimmervoid
+ - 4       x Ornithopter
+ - 4       x Memnite
+ - 4       x Myr Enforcer
+ - 4       x Master of Etherium
+ - 4       x Frogmite
+ - 4       x Cranial Plating
+ - 4       x Springleaf Drum
+ - 4       x Urza's Saga
+ - 1       x Sol Ring
+ - 3       x Thought Monitor
+ - 4       x Sojourner's Companion
+ - 4       x Vault of Whispers
+ - 4       x Mistvault Bridge
+ - 4       x Seat of the Synod
+ - 4       x Darksteel Citadel
+ - 4       x Glimmervoid
 
-Removed: Myr Enforcer, Added:Thought Monitor
-Removed: Sojourner's Companion, Added:Island
-Removed: Sojourner's Companion, Added:Island
-Removed: Glimmervoid, Added:Island
-Removed: Springleaf Drum, Added:Island
-Removed: Darksteel Citadel, Added:Island
-Removed: Glimmervoid, Added:Thoughtcast
-Removed: Thoughtcast, Added:Island
+Removed: Myr Enforcer, Added:Island (AWT: 5,241466666666667)
+Removed: Myr Enforcer, Added:Island (AWT: 5,211533333333334)
+Removed: Sojourner's Companion, Added:Island (AWT: 5,204733333333333)
+Removed: Myr Enforcer, Added:Island (AWT: 5,192966666666667)
 
 Ended Optimization: with final deck
 
-4       x Ornithopter
-4       x Memnite
-3       x Myr Enforcer
-4       x Master of Etherium
-4       x Frogmite
-4       x Cranial Plating
-3       x Springleaf Drum
-4       x Urza's Saga
-1       x Sol Ring
-4       x Thought Monitor
-2       x Sojourner's Companion
-4       x Vault of Whispers
-4       x Mistvault Bridge
-4       x Seat of the Synod
-3       x Darksteel Citadel
-2       x Glimmervoid
-6       x Island
+ - 4       x Ornithopter
+ - 4       x Memnite
+ - 1       x Myr Enforcer
+ - 4       x Master of Etherium
+ - 4       x Frogmite
+ - 4       x Cranial Plating
+ - 4       x Springleaf Drum
+ - 4       x Urza's Saga
+ - 1       x Sol Ring
+ - 3       x Thought Monitor
+ - 3       x Sojourner's Companion
+ - 4       x Vault of Whispers
+ - 4       x Mistvault Bridge
+ - 4       x Seat of the Synod
+ - 4       x Darksteel Citadel
+ - 4       x Glimmervoid
+ - 4       x Island
 
-**On the best of 10.000 games for each possible swap combination
-between the try list and the starting deck**
+**On the best of 10.000 games for each possible swap combination between the try**
+**list and the starting deck: in case of match a re-simulation of 30.000 is done**
 
 ```
 var starting = new Deck();
@@ -83,3 +81,14 @@ tryList.AddCards(4, () => new Thoughtcast());
 DeckOptimizer optimizer = new DeckOptimizer(starting, tryList);
 optimizer.Run();
 ```
+
+On the given deck, the thoughtcast gave no advantage whatsoever, and the only
+change was a optimization in the mana curve by removing 4 myr enforcers and
+adding 4 islands. The simulation makes sense overall, but probably since
+Myr enforcer relies on affinity the simulation would end up with a different
+result if I add more 0 artifacts, like welding jar.
+
+The result is promising, but I need more implemented cards and a more advanced
+playing strategy to check the results.
+
+Mistvault bridge seems to play a role since it was not removed.

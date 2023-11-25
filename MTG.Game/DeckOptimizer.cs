@@ -15,41 +15,42 @@ namespace MTG.Game
 
         void PrintDeck()
         {
-            foreach(var card in startingDeck.Cards())
+            foreach (var card in startingDeck.Cards())
             {
                 Console.WriteLine($"{startingDeck.GetCardCount(card)}\tx {startingDeck.GetFactory(card)().CardName}");
             }
         }
 
-        IEnumerable<(Func<Card> Removed, Func<Card> Added)> AllPossibilities()
+        IEnumerable<(Func<Card> Removed, Func<Card> Added, double turn)> AllPossibilities()
         {
-            for(int i=0; i<10; i++)
+            // first simulate the deck to have a compare point 
+            var simulation = new Simulation(startingDeck, 30000);
+            simulation.Run();
+            double betterTurn = simulation.GetAverageWinningTurn();
+
+            var typesToTryRemove = startingDeck.Cards().ToList();
+            Type betterRemoved = null;
+            Type betterAdded = null;
+
+            for (int i = 0; i < 10; i++)
             {
-                // first simulate the deck to have a compare point 
-                var simulation = new Simulation(startingDeck, 10000);
-                simulation.Run();
-                double betterTurn = simulation.GetAverageWinningTurn();
 
-                var typesToTryRemove = startingDeck.Cards().ToList();
-                Type betterRemoved = null;
-                Type betterAdded = null;
-
-                foreach(var types in typesToTryRemove )
+                foreach (var types in typesToTryRemove)
                 {
                     int previousNumber = startingDeck.GetCardCount(types);
                     var previousFactory = startingDeck.GetFactory(types);
 
                     var attemps = tryList.Cards().ToList();
 
-                    foreach(var attemp in attemps)
+                    foreach (var attemp in attemps)
                     {
                         startingDeck.SetCards(previousNumber, types, previousFactory);
 
-                        if (attemp!= types) // save identical simulations
+                        if (attemp != types) // save identical simulations
                         {
                             startingDeck.SetCards(previousNumber - 1, types, previousFactory);
                             startingDeck.SetCards(
-                                startingDeck.GetCardCount(attemp)+1
+                                startingDeck.GetCardCount(attemp) + 1
                                 , attemp, tryList.GetFactory(attemp));
 
                             simulation = new Simulation(startingDeck, 10000);
@@ -57,11 +58,17 @@ namespace MTG.Game
 
                             var winningTurn = simulation.GetAverageWinningTurn();
 
-                            if(winningTurn < betterTurn)
+                            if (winningTurn < betterTurn)
                             {
-                                betterTurn = winningTurn;
-                                betterAdded = attemp;
-                                betterRemoved = types;
+                                simulation = new Simulation(startingDeck, 30000);
+                                simulation.Run();
+                                winningTurn = simulation.GetAverageWinningTurn();
+                                if (winningTurn < betterTurn)
+                                {
+                                    betterTurn = winningTurn;
+                                    betterAdded = attemp;
+                                    betterRemoved = types;
+                                }
                             }
 
                             startingDeck.SetCards(
@@ -88,7 +95,10 @@ namespace MTG.Game
                     // also remove the card from trylist
                     int countInjected = tryList.GetCardCount(betterAdded) - 1;
                     tryList.SetCards(countInjected, betterAdded, factoryAdded);
-                    yield return (factoryRemoved, factoryAdded);
+                    yield return (factoryRemoved, factoryAdded, betterTurn);
+
+                    betterRemoved = null;
+                    betterAdded = null;
                 }
             }
         }
@@ -104,10 +114,10 @@ namespace MTG.Game
 
             Console.SetOut(StreamWriter.Null);
 
-            foreach(var (Removed, Added) in AllPossibilities())
+            foreach (var (Removed, Added, Turn) in AllPossibilities())
             {
                 Console.SetOut(standardOutput);
-                Console.WriteLine($"Removed: {Removed().CardName}, Added:{Added().CardName}");
+                Console.WriteLine($"Removed: {Removed().CardName}, Added:{Added().CardName} (AWT: {Turn})");
                 Console.SetOut(StreamWriter.Null);
             }
 

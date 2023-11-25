@@ -246,11 +246,14 @@ namespace MTG.Game.Strategies
             // in affinity we just want 2 or 3 lands and one power combination
             // (1 creature + cranial plaiting || one power creature like urza saga or master of etherium)
             var mana = hand.Where(x => x.ManaSource != null && x.Land).Count();
+            var creatures = hand.Where(x => x.Creature).Count();
+            var powerhouses = hand.Where(x => x.GetType() == typeof(UrzasSaga) || x.GetType() == typeof(CranialPlating)
+            || x.GetType() == typeof(MasterOfEtherium)).Count();
 
             if (hand.Where(x => x.GetType() == typeof(UrzasSaga)).Count() > 2)
                 return false;
 
-            return mana >= 2 && mana <= 3;
+            return mana >= 2 && mana <= 3 && creatures>0 && powerhouses>0;
         }
 
         public Card SelectCreatureToEquip(Card equipment, IGameInteraction gameInteraction)
