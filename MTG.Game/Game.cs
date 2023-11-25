@@ -18,6 +18,7 @@ namespace MTG.Game
         private readonly List<Card> grave;
         private readonly List<Card> playedCardsThisTurn;
         private int damageDealt;
+        private int playedLands;
 
         private int turn;
         public Game(Grimoire grimoire, IStrategy strategy, bool meStarting)
@@ -179,6 +180,11 @@ namespace MTG.Game
                         PutCardInPlayFromHand(card);
                     }
                 }
+
+                selectedFreeCards = strategy.SelectManaAndFreeCardsToPlay(this);
+
+                foreach (var card in selectedFreeCards)
+                    PutCardInPlayFromHand(card);
             }
         }
 
@@ -193,6 +199,8 @@ namespace MTG.Game
 
         private void UntapPhase()
         {
+            playedLands = 0;
+
             foreach (var card in play.ToList())
             {
                 card.Status_Tapped = false;
@@ -245,11 +253,16 @@ namespace MTG.Game
 
         public void PutCardInPlay(Card card)
         {
+            Console.WriteLine($"played: {card.CardName}");
+
             if (card.Creature && !card.Haste)
                 card.Status_Weakness = true;
 
             if (card.EntersGameTapped) // && TODO: ! Amulet Of Vigor
                 card.Status_Tapped = true;
+
+            if (card.Land)
+                playedLands++;
 
             playedCardsThisTurn.Add(card);
 
@@ -260,7 +273,6 @@ namespace MTG.Game
 
             effects.CardEnterPlay(card);
 
-            Console.WriteLine($"played: {card.CardName}");
         }
 
         public void PutCardInGraveyardFromPlay(Card card)
@@ -518,9 +530,22 @@ namespace MTG.Game
 
         public void DrawFromGame(Card soruce, int howmanycards)
         {
-            var card = grimoire.DrawCard();
-            Console.WriteLine($"Drawed: {card.CardName}\n");
-            hand.Add(card);
+            for (int i = 0; i < howmanycards; i++)
+            {
+                var card = grimoire.DrawCard();
+                Console.WriteLine($"Drawed: {card.CardName}");
+                hand.Add(card);
+            }
+        }
+
+        public bool CanPlayLand()
+        {
+            return playedLands < GetMaxPlayableLands();
+        }
+
+        private int GetMaxPlayableLands()
+        {
+            return 1;
         }
     }
 }

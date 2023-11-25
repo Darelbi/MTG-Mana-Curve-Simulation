@@ -69,7 +69,7 @@ namespace MTG.UnitTests
             // Turn 3  // Found bug, lands are not played in this phase, but possibly should be played
             game.Turn();
             Assert.IsTrue(game.PlayedCards(new Ornithopter(), new DarksteelCitadel(), new ThoughtMonitor()
-                                        , new Ornithopter(), new Glimmervoid()));
+                                        , new Ornithopter()));
         }
 
     }

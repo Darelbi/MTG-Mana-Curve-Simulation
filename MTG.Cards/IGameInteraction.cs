@@ -14,6 +14,8 @@ namespace MTG.Cards
 
         void DrawFromGame(Card soruce, int howmanycards);
 
+        bool CanPlayLand();
+
         void Sacrifice(Card card);
 
         void PutCardInPlay(Card card);

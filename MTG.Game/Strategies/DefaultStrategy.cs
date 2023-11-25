@@ -20,7 +20,7 @@ namespace MTG.Game.Strategies
             // duplicate, we just do selection, it is game responsibility to actuate the selection.
             var handDuplicate = interaction.GetHandCards().ToList();
 
-            var land = SelectLandToPlay(handDuplicate, interaction);
+            var land = interaction.CanPlayLand()? SelectLandToPlay(handDuplicate, interaction): null;
 
             var freeCards = SelectFreeCards(handDuplicate, interaction, land);
 
