@@ -1,0 +1,45 @@
+using MTG.Cards.Cards.Creatures;
+using MTG.Cards.Cards.Lands;
+using MTG.Game.Strategies;
+
+namespace MTG.UnitTests
+{
+    [TestClass]
+    public class AffinityTests
+    {
+        [TestMethod]
+        public void TestAffinityWithCost0GetsPlayed()
+        {
+            var grimoire = 
+            TestUtils.SetupDeck(    new SojournersCompanion(),
+                                    new SeatOfTheSynod(),
+                                    new Frogmite(),
+                                    new MistvaultBridge(),
+                                    new VaultOfWhispers(),
+                                    new Ornithopter(),
+
+                                    new Ornithopter(),
+                                    new Glimmervoid());
+
+            var game = new Game.Game(grimoire, new DefaultStrategy(), true);
+            game.BeginTestGame(6);
+
+            // Turn 1, should play Ornitopher and MistvaultBridge
+            game.Turn();
+            Assert.IsTrue(game.PlayedCards(new Ornithopter(), new MistvaultBridge()));
+
+            // Turn 2, should play Ornitopther, Seat Of the Synod AND Frogmite
+            game.Turn();
+            Assert.IsTrue(game.PlayedCards( new Ornithopter(), 
+                                            new SeatOfTheSynod(),
+                                            new Frogmite(),
+                                            new SojournersCompanion()
+                                            ));
+
+            // Turn 3, should play
+            game.Turn();
+            Assert.IsTrue(game.PlayedCards(new VaultOfWhispers()));
+        }
+
+    }
+}

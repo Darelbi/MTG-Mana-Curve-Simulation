@@ -1,0 +1,43 @@
+---GAME START---
+
+--Mulligan!
+
+Sojourner's Companion
+Seat of the Synod
+Frogmite
+Mistvault Bridge
+Vault of Whispers
+Ornithopter
+
+ TURN
+
+played: Ornithopter
+played: Mistvault Bridge
+
+ TURN
+
+Drawed: Ornithopter
+
+played: Ornithopter
+played: Seat of the Synod   = BACO => DOVREBBE GIOCARE FROGMITE
+
+ TURN
+
+Drawed: Glimmervoid
+
+played: Frogmite
+played: Glimmervoid
+
+ TURN
+
+Drawed: Mistvault Bridge
+
+played: Mistvault Bridge
+
+ TURN
+
+Drawed: Memnite
+
+played: Memnite
+played: Sojourner's Companion
+played: Vault of Whispers
