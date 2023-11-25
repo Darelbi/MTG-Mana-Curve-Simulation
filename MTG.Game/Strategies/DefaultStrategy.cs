@@ -258,7 +258,7 @@ namespace MTG.Game.Strategies
             var cards = gameInteraction.GetPlayCards();
 
             return cards.Where(x => x.Creature)
-                .OrderBy(x => x.Status_Tapped) // first untapped creatures
+                .OrderBy(x => x.Status_Tapped || x.Status_Weakness) // first untapped creatures
                 .ThenBy(x => gameInteraction.GetCardPower(x)) // first equip low power creatures
                 .ThenByDescending(x => x.Flying) // then first creatures with flying
                 .FirstOrDefault();

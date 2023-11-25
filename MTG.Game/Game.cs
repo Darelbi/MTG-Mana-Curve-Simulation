@@ -477,10 +477,10 @@ namespace MTG.Game
 
             foreach( var equipment in card.EquippedEquipment)
             {
-                if (card.Features.ContainsKey(typeof(IEquippedPowerFeat)))
+                if (equipment.Features.ContainsKey(typeof(IEquippedPowerFeat)))
                 {
                     totalPower +=
-                    ((IEquippedPowerFeat)card.Features[typeof(IEquippedPowerFeat)]).GetEquippedPower(card, this);
+                    ((IEquippedPowerFeat)equipment.Features[typeof(IEquippedPowerFeat)]).GetEquippedPower(card, this);
                 }
             }
 
@@ -499,7 +499,7 @@ namespace MTG.Game
             {
                 throw new System.Exception("Why was equip called if there are no equippable creatures?");
             }
-            Debug.WriteLine($"equipped: {equipment.CardName} to {creature.CardName}");
+            Console.WriteLine($"equipped: {equipment.CardName} to {creature.CardName}");
             creature.EquippedEquipment.Add(equipment);
             equipment.EquippedTo=creature;
         }
