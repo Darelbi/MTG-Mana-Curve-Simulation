@@ -19,6 +19,8 @@ namespace MTG.Cards
         public bool Land { get; set; }
         public bool Enchantment { get; set; }
         public bool Creature { get; set; }
+
+        public bool Sorcery { get; set; }
         public bool Artifact { get; set; }
         public bool Affinity { get; set; }
         public Mana.Mana? ArtifactLandcyclingCost { get; set; }
@@ -61,5 +63,6 @@ namespace MTG.Cards
         public int PlusOnePlusOneTokens { get; set; }
         public bool Haste { get; set; }
         public bool AttackWithoutTapping { get; set; }
+        public bool Instant { get; set; }
     }
 }

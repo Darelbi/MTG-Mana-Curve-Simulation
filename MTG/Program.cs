@@ -1,6 +1,7 @@
 ﻿using MTG.Cards.Cards.Artifacts;
 using MTG.Cards.Cards.Creatures;
 using MTG.Cards.Cards.Lands;
+using MTG.Cards.Cards.Sorceries;
 using MTG.Game;
 
 var starting = new Deck();
@@ -28,6 +29,7 @@ starting.AddCards(4, () => new Glimmervoid());
 
 tryList.AddCards(8, () => new Island());
 tryList.AddCards(1, () => new ThoughtMonitor());
+tryList.AddCards(4, () => new Thoughtcast());
 
 
 DeckOptimizer optimizer = new DeckOptimizer(starting, tryList);

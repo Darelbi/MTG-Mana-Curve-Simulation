@@ -1,6 +1,7 @@
 ﻿using MTG.Cards;
 using MTG.Cards.Cards.ActivatedAbilities;
 using MTG.Cards.Cards.Feats;
+using MTG.Cards.Cards.Sorceries;
 using MTG.Game.Utils;
 using MTG.Mana;
 using System.Collections.ObjectModel;
@@ -265,6 +266,14 @@ namespace MTG.Game
                 playedLands++;
 
             playedCardsThisTurn.Add(card);
+
+            if(card.Sorcery || card.Instant)
+            {
+                var spell = (ICastEffect)card;
+                spell.CastEffect(this);
+                grave.Add(card);
+                return;
+            }
 
             var feat = card.GetFeat<IOnEnterGameFeat>();
             feat?.OnEnterGame(card, this);
