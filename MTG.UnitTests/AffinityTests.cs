@@ -1,5 +1,7 @@
+using MTG.Cards.Cards.Artifacts;
 using MTG.Cards.Cards.Creatures;
 using MTG.Cards.Cards.Lands;
+using MTG.Cards.Cards.Sorceries;
 using MTG.Game.Strategies;
 
 namespace MTG.UnitTests
@@ -72,5 +74,29 @@ namespace MTG.UnitTests
                                         , new Ornithopter()));
         }
 
+
+        [TestMethod]
+        public void ToughtcastDrawCards()
+        {
+            var grimoire =
+            TestUtils.SetupDeck(    new Thoughtcast(),
+                                    new SolRing(),
+                                    new Ornithopter(),
+                                    new SpringleafDrum(),
+                                    new SeatOfTheSynod(),
+
+                                    new Ornithopter(),
+                                    new Ornithopter(),
+                                    new Ornithopter());
+
+            var game = new Game.Game(grimoire, new DefaultStrategy(), true);
+            game.BeginTestGame(5);
+
+            // Turn 1
+            game.Turn();
+            Assert.IsTrue(game.PlayedCards(new Thoughtcast(), new SolRing(),
+                new Ornithopter(), new SpringleafDrum(), new SeatOfTheSynod(),
+                new Ornithopter(), new Ornithopter()));
+        }
     }
 }
