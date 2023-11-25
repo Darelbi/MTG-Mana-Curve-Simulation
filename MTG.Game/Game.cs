@@ -137,7 +137,11 @@ namespace MTG.Game
         private void CombatPhase()
         {
             // there are no foes. So we just assume all creatures are attacking. so we don't need really any strategy for that
-            var attacking = play.Where(x => x.Creature && x.Status_Tapped == false && GetCardPower(x) > 0);
+            var attacking = play.Where(
+                x => x.Creature 
+                && x.Status_Tapped == false
+                && GetCardPower(x) > 0
+                && x.Status_Weakness == false);
 
             foreach(var attack in attacking)
             {
