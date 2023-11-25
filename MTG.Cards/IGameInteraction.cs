@@ -1,4 +1,5 @@
 ﻿using MTG.Cards.Cards.ActivatedAbilities;
+using System.Collections.ObjectModel;
 
 namespace MTG.Cards
 {
@@ -8,6 +9,8 @@ namespace MTG.Cards
         List<Card> GetPlayCards();
 
         List<Card> GetHandCards();
+
+        ReadOnlyCollection<Card> GetGrimoireCards();
 
         void Sacrifice(Card card);
 
@@ -19,5 +22,6 @@ namespace MTG.Cards
         int HowManyCreaturesICanTapAsCost(Card source);
         int GetCardPower(Card x);
         void Equip(Card equipment);
+        void FindCardToPlayFromDeck(Card source, Func<Card, bool> filter);
     }
 }

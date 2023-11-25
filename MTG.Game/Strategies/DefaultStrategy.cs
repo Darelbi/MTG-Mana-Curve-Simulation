@@ -324,7 +324,7 @@ namespace MTG.Game.Strategies
                 };
 
                 var creatures = cardsInHand.Where(x => x.Creature).OrderBy(
-                        x => sortOrder[x.GetType()]
+                        x => sortOrder.ContainsKey(x.GetType())? sortOrder[x.GetType()] : 1000
                     );
 
                 cardsToPlay.AddRange(creatures);
@@ -364,6 +364,24 @@ namespace MTG.Game.Strategies
         public void TapCreatureAsCost(Card source, IGameInteraction gameInteraction)
         {
             CreaturesICanTapAsCost(gameInteraction).First().Status_Tapped = true;
+        }
+
+        public Card FindCardInDeck(Card source, Func<Card, bool> filter, IGameInteraction gameInteraction)
+        {
+            var sortOrder = new Dictionary<Type, int>()
+                {
+                    {typeof(SolRing),               0},
+                    {typeof(SpringleafDrum),        1},
+                    {typeof(Ornithopter),           2}
+                };
+
+            var cards = gameInteraction.GetGrimoireCards().Where( x => filter(x))
+                .OrderBy( x=> sortOrder.ContainsKey(x.GetType())? sortOrder[x.GetType()] : 1000);
+
+            if (cards.Any())
+                return cards.First();
+
+            return null;
         }
 
     }

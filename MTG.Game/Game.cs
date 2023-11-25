@@ -3,6 +3,7 @@ using MTG.Cards.Cards.ActivatedAbilities;
 using MTG.Cards.Cards.Feats;
 using MTG.Game.Utils;
 using MTG.Mana;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 
 namespace MTG.Game
@@ -274,6 +275,12 @@ namespace MTG.Game
 
         }
 
+        private void PutCardInPlayFromDeck(Card card)
+        {
+            grimoire.Remove(card);
+            PutCardInPlay(card);
+        }
+
         public void PutCardInPlayFromHand(Card card)
         {
             hand.Remove(card);
@@ -478,6 +485,18 @@ namespace MTG.Game
             Debug.WriteLine($"equipped: {equipment.CardName} to {creature.CardName}");
             creature.EquippedEquipment.Add(equipment);
             equipment.EquippedTo=creature;
+        }
+
+        public void FindCardToPlayFromDeck(Card source, Func<Card, bool> filter)
+        {
+            Card card = strategy.FindCardInDeck(source, filter, (IGameInteraction)this);
+            if(card!=null)
+                PutCardInPlayFromDeck(card);
+        }
+
+        public ReadOnlyCollection<Card> GetGrimoireCards()
+        {
+            return grimoire.GetAllCards();
         }
     }
 }

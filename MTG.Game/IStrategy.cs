@@ -13,5 +13,6 @@ namespace MTG.Game
 
         bool ShouldMulligan(List<Card> hand);
         void TapCreatureAsCost(Card source, IGameInteraction gameInteraction);
+        Card FindCardInDeck(Card source, Func<Card, bool> filter, IGameInteraction gameInteraction);
     }
 }

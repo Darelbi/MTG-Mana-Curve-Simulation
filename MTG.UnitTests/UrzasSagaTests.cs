@@ -74,7 +74,9 @@ namespace MTG.UnitTests
                                     new UrzasSaga(),
                                     new UrzasSaga(),
                                     new Memnite(),
-                                    new Memnite()
+                                    new Memnite(),
+                                    new Memnite(), // put into play by saga
+                                    new Memnite() // put into play by saga
                                     );
 
             var game = new Game.Game(grimoire, new DefaultStrategy(), true);
@@ -107,12 +109,12 @@ namespace MTG.UnitTests
 
             // Turn 7
             game.Turn();
-            Assert.IsTrue(game.PlayedCards(new Memnite(), new SeatOfTheSynod()));
+            Assert.IsTrue(game.PlayedCards(new Memnite(), new SeatOfTheSynod(), new Memnite()));
             Assert.IsTrue(game.CheckCardsInPlay(new Construct(), new Construct(), new Construct()));
 
             // Turn 8
             game.Turn();
-            Assert.IsTrue(game.PlayedCards(new Memnite(), new SeatOfTheSynod()));
+            Assert.IsTrue(game.PlayedCards(new Memnite(), new SeatOfTheSynod(), new Memnite()));
             Assert.IsTrue(game.CheckCardsInPlay(new Construct(), new Construct(), new Construct(), new Construct()));
         }
 
@@ -284,7 +286,8 @@ namespace MTG.UnitTests
 
                                     new MistvaultBridge(),
                                     new UrzasSaga(),
-                                    new SolRing(),
+                                    new SolRing(), // played by first urza saga
+                                    new Memnite(),
                                     new Memnite()
                                     );
 
@@ -307,7 +310,7 @@ namespace MTG.UnitTests
 
             // Turn 4 : Drawed Sol Ring
             game.Turn();
-            Assert.IsTrue(game.PlayedCards(new UrzasSaga() , new SolRing(), new SojournersCompanion(), new SojournersCompanion()));
+            Assert.IsTrue(game.PlayedCards(new UrzasSaga() , new SolRing(), new SojournersCompanion(), new SojournersCompanion(), new Memnite()));
             Assert.IsTrue(game.CheckCardsInPlay(new Construct(), new Construct()));
              
             // Turn 5 : Drawed Memnit
@@ -331,7 +334,8 @@ namespace MTG.UnitTests
                                     new MistvaultBridge(),
                                     new UrzasSaga(),
                                     new Memnite(),
-                                    new Memnite()
+                                    new Memnite(),
+                                    new SpringleafDrum() // played by urzasaga
                                     );
 
             var game = new Game.Game(grimoire, new DefaultStrategy(), true);
@@ -346,19 +350,20 @@ namespace MTG.UnitTests
             Assert.IsTrue(game.PlayedCards(new UrzasSaga()));
 
             // Turn 3 : Drawed UrzasSaga
-            game.Turn(); // Played Mistvault Bridge... WHAT? CANNOT PLAY TAPPED AT SECOND TURN
-                         // BECAUSE NEED SUPPORT FOR SAGA
-                         // Assert.IsTrue(game.PlayedCards(new VaultOfWhispers()));
-                         //Assert.IsTrue(game.CheckCardsInPlay(new Construct()));
+            game.Turn(); 
+            Assert.IsTrue(game.PlayedCards(new VaultOfWhispers()));
+            Assert.IsTrue(game.CheckCardsInPlay(new Construct()));
 
-            // Turn 4 : Drawed Sol Ring
+            // Turn 4 : Drawed Memnite
             game.Turn();
-            //Assert.IsTrue(game.PlayedCards());
-            //Assert.IsTrue(game.CheckCardsInPlay(new Construct(), new Construct()));
+            Assert.IsTrue(game.PlayedCards( new Memnite(), new UrzasSaga()
+                , new SpringleafDrum(), new SojournersCompanion(), new SojournersCompanion()));
+            Assert.IsTrue(game.CheckCardsInPlay(new Construct(), new Construct()));
 
             // Turn 5 : Drawed Memnit
             game.Turn();
-            //Assert.IsTrue(game.PlayedCards());
+            Assert.IsTrue(game.PlayedCards( new MistvaultBridge(), new Memnite()));
+            Assert.IsTrue(game.CheckCardsInPlay(new Construct(), new Construct(), new Construct()));
         }
     }
 }

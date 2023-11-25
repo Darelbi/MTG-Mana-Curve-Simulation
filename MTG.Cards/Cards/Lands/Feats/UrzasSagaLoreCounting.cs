@@ -1,5 +1,6 @@
 ﻿using MTG.Cards.Cards.Feats;
 using MTG.Cards.Cards.Lands.Abilities;
+using MTG.Mana;
 
 namespace MTG.Cards.Cards.Lands.Feats
 {
@@ -33,6 +34,12 @@ namespace MTG.Cards.Cards.Lands.Feats
                     break;
 
                 case 3:
+                    interaction.FindCardToPlayFromDeck(source,
+                        x=> x.ManaCost != null 
+                        //seek card with cost exactly 1 or 0
+                        && x.Artifact
+                        && x.ManaCost.ConvertedManaValue()<=1
+                        && x.ManaCost.TotalColorlessValue() == x.ManaCost.ConvertedManaValue());
                     interaction.Sacrifice(source);
                     break;
             }

@@ -1,4 +1,5 @@
 ﻿using MTG.Cards;
+using System.Collections.ObjectModel;
 
 namespace MTG.Game
 {
@@ -34,6 +35,16 @@ namespace MTG.Game
         public void PutCardBack(Card card)
         {
             cards.Add(card);
+        }
+
+        internal void Remove(Card card)
+        {
+            cards.Remove(card);
+        }
+
+        public ReadOnlyCollection<Card> GetAllCards()
+        {
+            return cards.AsReadOnly();
         }
     }
 }
