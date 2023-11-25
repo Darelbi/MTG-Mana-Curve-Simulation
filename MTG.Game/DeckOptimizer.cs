@@ -23,10 +23,10 @@ namespace MTG.Game
 
         IEnumerable<(Func<Card> Removed, Func<Card> Added)> AllPossibilities()
         {
-            for(int i=0; i<8; i++)
+            for(int i=0; i<10; i++)
             {
                 // first simulate the deck to have a compare point 
-                var simulation = new Simulation(startingDeck, 50000);
+                var simulation = new Simulation(startingDeck, 10000);
                 simulation.Run();
                 double betterTurn = simulation.GetAverageWinningTurn();
 
@@ -52,7 +52,7 @@ namespace MTG.Game
                                 startingDeck.GetCardCount(attemp)+1
                                 , attemp, tryList.GetFactory(attemp));
 
-                            simulation = new Simulation(startingDeck, 100);
+                            simulation = new Simulation(startingDeck, 10000);
                             simulation.Run();
 
                             var winningTurn = simulation.GetAverageWinningTurn();
@@ -73,19 +73,23 @@ namespace MTG.Game
                     }
                 }
 
-                // Ok first tranche of simulations runned now apply permanently the change to the deck
-                int countRemoved = startingDeck.GetCardCount(betterRemoved)-1;
-                var factoryRemoved = startingDeck.GetFactory(betterRemoved);
-                startingDeck.SetCards(countRemoved, betterRemoved, factoryRemoved);
 
-                int countAdded = startingDeck.GetCardCount(betterAdded) + 1;
-                var factoryAdded = tryList.GetFactory(betterAdded);
-                startingDeck.SetCards(countAdded, betterAdded, factoryAdded);
+                if (betterRemoved != null)
+                {
+                    // Ok first tranche of simulations runned now apply permanently the change to the deck
+                    int countRemoved = startingDeck.GetCardCount(betterRemoved) - 1;
+                    var factoryRemoved = startingDeck.GetFactory(betterRemoved);
+                    startingDeck.SetCards(countRemoved, betterRemoved, factoryRemoved);
 
-                // also remove the card from trylist
-                int countInjected = tryList.GetCardCount(betterAdded) - 1;
-                tryList.SetCards(countInjected, betterAdded, factoryAdded);
-                yield return (factoryRemoved, factoryAdded);
+                    int countAdded = startingDeck.GetCardCount(betterAdded) + 1;
+                    var factoryAdded = tryList.GetFactory(betterAdded);
+                    startingDeck.SetCards(countAdded, betterAdded, factoryAdded);
+
+                    // also remove the card from trylist
+                    int countInjected = tryList.GetCardCount(betterAdded) - 1;
+                    tryList.SetCards(countInjected, betterAdded, factoryAdded);
+                    yield return (factoryRemoved, factoryAdded);
+                }
             }
         }
 

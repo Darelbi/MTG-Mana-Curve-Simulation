@@ -17,6 +17,7 @@ starting.AddCards(4, () => new CranialPlating());
 starting.AddCards(4, () => new SpringleafDrum());
 starting.AddCards(4, () => new UrzasSaga());
 starting.AddCards(1, () => new SolRing());
+starting.AddCards(3, () => new ThoughtMonitor());
 starting.AddCards(4, () => new SojournersCompanion());
 
 starting.AddCards(4, () => new VaultOfWhispers());
@@ -25,9 +26,12 @@ starting.AddCards(4, () => new SeatOfTheSynod());
 starting.AddCards(4, () => new DarksteelCitadel());
 starting.AddCards(4, () => new Glimmervoid());
 
+tryList.AddCards(8, () => new Island());
+tryList.AddCards(1, () => new ThoughtMonitor());
+
 
 DeckOptimizer optimizer = new DeckOptimizer(starting, tryList);
-
+optimizer.Run();
 
 
 //Deck deck = new();

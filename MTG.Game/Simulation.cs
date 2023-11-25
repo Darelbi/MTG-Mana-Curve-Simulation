@@ -18,6 +18,7 @@ namespace MTG.Game
         {
             this.startingDeck = startingDeck;
             this.games = games;
+            this.winningTurn = new List<int>();
         }
 
         public void Run()

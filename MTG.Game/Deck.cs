@@ -46,17 +46,20 @@ namespace MTG.Game
             if (num < 0)
                 throw new ArgumentException("Cannot have a negative number of cards");
 
-            if(num ==0)
+            if (num == 0)
             {
-                if(FactoriesDic.ContainsKey(type))
+                if (FactoriesDic.ContainsKey(type))
                 {
                     FactoriesDic.Remove(type);
                     NumbersDic.Remove(type);
                 }
             }
+            else
+            {
 
-            FactoriesDic[type] = cardFactory;
-            NumbersDic[type] = num;
+                FactoriesDic[type] = cardFactory;
+                NumbersDic[type] = num;
+            }
         }
 
         public void AddCards<T>(int num, Func<T> cardFactory) where T : Card
