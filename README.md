@@ -3,9 +3,11 @@
 This is an attempt to do an almost real-world Magic: The Gathering simulation but
 for the deck type "Affinity" or "Metalcraft". The reason is that such thing do not
 exists yet, and Affinity decks are the ones with more complex curve mana ever.
+So this is a Monte Carlo Simulation for Affinity Deck, that simulates almost a real
+game.
 
 The approach is an evolution of what Guilherme Braga did with Python, but this is
-done in C#. 
+done in C# and **does a lot more**
 
 The game let you specify a deck among existing cards, and then it **run a Simulation**
 **where there is no foe**. Let's it. Basically it is just playing alone **but following**
@@ -34,12 +36,13 @@ there are already 2 mana in game (Sol ring countin etc.) or 1 mana in play and
 1 mana that is going to be played (in hand). Then each turn Lore counter are added
 to Urza's Saga, and the effects take place, it can be used as land the first turn
 the second turn creates a Construct token, and the third turn idem before being
-sacrificed.
+sacrificed. In this way the Urza's Saga will be played when it is possible
+to create 2 construct tokens.
 
 The approach I followed, is the simplest possible:
  
  - No foe
- - Greedy strategy VS real planning
+ - Mostly greedy, with some planning (for Atog and Steel Overseer)
  - Just some of the cards for affinity are implemented
  - I tried to avoid over-engineering the code 
  
