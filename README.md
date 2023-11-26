@@ -46,6 +46,56 @@ The approach I followed, is the simplest possible:
 But despite that, the resulting code is incredibly complex
 
 
+## The results so far
+
+Running the simulation several times yielded this highly optimized deck that if not
+blocked would wind at turn 5 99,9% of times. Of course the simulation cannot keep
+into account "controlling" effects. But this is the starting mana curve base.
+The average winning turn is 5,07.
+
+**Creatures (25)**:
+
+ - 4    x Ornithopter
+ - 4    x Memnite
+ - 4    x Signal Pest
+ - 4    x Frogmite
+ - 2    x Steel Overseer
+ - 2    x Thought Monitor
+ - 4    x Master of Etherium
+ - 1    x Sojourner's Companion
+
+**Artifacts (7)**
+
+ - 4    x Cranial Plating
+ - 2    x Springleaf Drum
+ - 1    x Sol Ring
+
+**Lands (28)**
+
+ - 4    x Urza's Saga
+ - 1    x Great Furnace
+ - 4    x Vault of Whispers
+ - 3    x Mistvault Bridge
+ - 4    x Seat of the Synod
+ - 4    x Darksteel Citadel
+ - 4    x Glimmervoid
+ - 4    x Island
+
+ The simulation shows that having the Lotus Petal is almost the same as not having
+ it. The simulation shows the difference of AWT (Average Winning Turn) with lotus petal
+ is **slightly** worse (~0,01).
+
+ The simulation also shows that Thoughtcast, and Atog, are useless
+
+ Also the cards that impact less upon removal are
+
+ - 2	x Island 
+ - 1    x Sojourner's Companion
+ - 2    x Thought Monitor
+
+ Which are the canditates for being swapped with the Sideboard
+
+
 ## Running the Simulation
 
 The code is c# and is pretty fast doing 1 simulation of 1 game, however to keep code

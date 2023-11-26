@@ -87,11 +87,11 @@ secondDeck.AddCards(2, () => new SpringleafDrum());//
 secondDeck.AddCards(4, () => new UrzasSaga());//
 secondDeck.AddCards(1, () => new SolRing());
 
-secondDeck.AddCards(1, () => new DarksteelCitadel());//
+secondDeck.AddCards(1, () => new GreatFurnace());//
 secondDeck.AddCards(4, () => new VaultOfWhispers());//
 secondDeck.AddCards(3, () => new MistvaultBridge());//
 secondDeck.AddCards(4, () => new SeatOfTheSynod());//
-secondDeck.AddCards(4, () => new GreatFurnace());//
+secondDeck.AddCards(4, () => new DarksteelCitadel());//
 secondDeck.AddCards(4, () => new Glimmervoid());////
 secondDeck.AddCards(4, () => new Island());//
 secondDeck.AddCards(4, () => new SignalPest());//
