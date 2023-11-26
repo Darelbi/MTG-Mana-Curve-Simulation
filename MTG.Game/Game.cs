@@ -1,6 +1,5 @@
 ﻿using MTG.Cards;
 using MTG.Cards.Cards.ActivatedAbilities;
-using MTG.Cards.Cards.Effects;
 using MTG.Cards.Cards.Feats;
 using MTG.Cards.Cards.Sorceries;
 using MTG.Game.Utils;
@@ -567,6 +566,11 @@ namespace MTG.Game
         private int GetMaxPlayableLands()
         {
             return 1;
+        }
+
+        public int FoeLifeLeft()
+        {
+            return 30 - damageDealt;
         }
     }
 }

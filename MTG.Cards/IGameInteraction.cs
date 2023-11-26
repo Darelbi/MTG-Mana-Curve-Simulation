@@ -25,6 +25,8 @@ namespace MTG.Cards
         void TapCreatureAsCost(Card source);
         int HowManyCreaturesICanTapAsCost(Card source);
         int GetCardPower(Card x);
+
+        int FoeLifeLeft();
         void Equip(Card equipment);
         void FindCardToPlayFromDeck(Card source, Func<Card, bool> filter);
     }

@@ -17,24 +17,24 @@ namespace MTG.Game
         {
             foreach (var card in startingDeck.Cards())
             {
-                Console.WriteLine($"{startingDeck.GetCardCount(card)}\tx {startingDeck.GetFactory(card)().CardName}");
+                Console.WriteLine($" - {startingDeck.GetCardCount(card)}\tx {startingDeck.GetFactory(card)().CardName}");
             }
         }
 
         IEnumerable<(Func<Card> Removed, Func<Card> Added, double turn)> AllPossibilities()
         {
             // first simulate the deck to have a compare point 
-            var simulation = new Simulation(startingDeck, 30000);
+            var simulation = new Simulation(startingDeck, 40000);
             simulation.Run();
             double betterTurn = simulation.GetAverageWinningTurn();
 
-            var typesToTryRemove = startingDeck.Cards().ToList();
             Type betterRemoved = null;
             Type betterAdded = null;
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 1000; i++)
             {
 
+                var typesToTryRemove = startingDeck.Cards().ToList();
                 foreach (var types in typesToTryRemove)
                 {
                     int previousNumber = startingDeck.GetCardCount(types);
@@ -60,7 +60,7 @@ namespace MTG.Game
 
                             if (winningTurn < betterTurn)
                             {
-                                simulation = new Simulation(startingDeck, 30000);
+                                simulation = new Simulation(startingDeck, 25000);
                                 simulation.Run();
                                 winningTurn = simulation.GetAverageWinningTurn();
                                 if (winningTurn < betterTurn)
@@ -100,6 +100,8 @@ namespace MTG.Game
                     betterRemoved = null;
                     betterAdded = null;
                 }
+                else
+                    yield break;
             }
         }
 
@@ -117,7 +119,7 @@ namespace MTG.Game
             foreach (var (Removed, Added, Turn) in AllPossibilities())
             {
                 Console.SetOut(standardOutput);
-                Console.WriteLine($"Removed: {Removed().CardName}, Added:{Added().CardName} (AWT: {Turn})");
+                Console.WriteLine($" - Removed: {Removed().CardName}, Added:{Added().CardName} (AWT: {Turn})");
                 Console.SetOut(StreamWriter.Null);
             }
 

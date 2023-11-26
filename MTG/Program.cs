@@ -32,6 +32,8 @@ tryList.AddCards(1, () => new ThoughtMonitor());
 tryList.AddCards(1, () => new LotusPetal());
 tryList.AddCards(4, () => new Thoughtcast());
 tryList.AddCards(4, () => new SignalPest());
+tryList.AddCards(4, () => new SteelOverseer());
+
 
 
 DeckOptimizer optimizer = new DeckOptimizer(starting, tryList);

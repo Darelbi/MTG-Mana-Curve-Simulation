@@ -3,6 +3,7 @@ using MTG.Cards.Cards.ActivatedAbilities;
 using MTG.Cards.Cards.Artifacts;
 using MTG.Cards.Cards.Artifacts.Abilities;
 using MTG.Cards.Cards.Creatures;
+using MTG.Cards.Cards.Creatures.Abilities;
 using MTG.Cards.Cards.Lands;
 using MTG.Cards.Cards.Lands.Abilities;
 using MTG.Game.Utils;
@@ -20,7 +21,7 @@ namespace MTG.Game.Strategies
             // duplicate, we just do selection, it is game responsibility to actuate the selection.
             var handDuplicate = interaction.GetHandCards().ToList();
 
-            var land = interaction.CanPlayLand()? SelectLandToPlay(handDuplicate, interaction): null;
+            var land = interaction.CanPlayLand() ? SelectLandToPlay(handDuplicate, interaction) : null;
 
             var freeCards = SelectFreeCards(handDuplicate, interaction, land);
 
@@ -65,7 +66,7 @@ namespace MTG.Game.Strategies
 
             // only at first turn play first lands with entersGameTapped = true
             bool firstTurn = interaction.GetPlayCards().Count() == 0;
-          
+
             // if got a sol ring, play it immediatly since it supports Saga alone
             var handCards = interaction.GetHandCards();
             if (handCards.Where(x => x.GetType() == typeof(SolRing)).Any())
@@ -74,12 +75,12 @@ namespace MTG.Game.Strategies
             // the same applies if there are 2 springleaf drums and enough creatures to be tapped (not keeping into account affinity for now)
             var drums = handCards.Where(x => x.GetType() == typeof(SpringleafDrum)).Count();
             var creatures = handCards.Where(x => x.Creature == true && x.ManaCost.ConvertedManaValue() == 0).Count();
-            if(drums>1 && creatures>1)
+            if (drums > 1 && creatures > 1)
                 firstTurn = false;
 
-            bool needsBlue = (handCards.Where(x => x.ManaCost != null && x.ManaCost.HaveBlue()).Count() 
-                            == handCards.Where(x => x.ManaCost != null ).Count())
-                && interaction.GetPlayCards().Where( x => x.ManaSource != null && x.ManaSource.HaveBlue()).Count() == 0;
+            bool needsBlue = (handCards.Where(x => x.ManaCost != null && x.ManaCost.HaveBlue()).Count()
+                            == handCards.Where(x => x.ManaCost != null).Count())
+                && interaction.GetPlayCards().Where(x => x.ManaSource != null && x.ManaSource.HaveBlue()).Count() == 0;
 
             // TODO: check if I should keep into count lands that gives more than one mana.
             if (firstTurn)
@@ -248,12 +249,12 @@ namespace MTG.Game.Strategies
             var mana = hand.Where(x => x.ManaSource != null && x.Land).Count();
             var creatures = hand.Where(x => x.Creature).Count();
             var powerhouses = hand.Where(x => x.GetType() == typeof(UrzasSaga) || x.GetType() == typeof(CranialPlating)
-            || x.GetType() == typeof(MasterOfEtherium)).Count();
+            || x.GetType() == typeof(MasterOfEtherium) || x.GetType() == typeof(SteelOverseer)).Count();
 
             if (hand.Where(x => x.GetType() == typeof(UrzasSaga)).Count() > 2)
                 return false;
 
-            return mana >= 2 && mana <= 3 && creatures>0 && powerhouses>0;
+            return mana >= 2 && mana <= 3 && creatures > 0 && powerhouses > 0;
         }
 
         public Card SelectCreatureToEquip(Card equipment, IGameInteraction gameInteraction)
@@ -280,13 +281,80 @@ namespace MTG.Game.Strategies
                 if (anyCreatureInPlay)
                 {
                     var platingAbility = abilities
-                        .Where( x => x.GetType() == typeof(CranialPlatingAbility))
-                        .Where( x => x.Owner.EquippedTo == null).ToList(); // do not equip already equipped equipment
+                        .Where(x => x.GetType() == typeof(CranialPlatingAbility))
+                        .Where(x => x.Owner.EquippedTo == null).ToList(); // do not equip already equipped equipment
                     foreach (var ability in platingAbility)
                         gameInteraction.ActivateAbility(ability);
                 }
             }
+
+            var overseerAbilities = abilities.Where(x => x.GetType() == typeof(SteelOverseerAbility) && x.Owner.Status_Tapped == false).ToList();
+
+            // TODO: simulate attack phase without tapping (otherwise we don't get SignalPest and other effects into account)
+            int totalDamageDealt = gameInteraction.GetPlayCards().Where(x => x.Creature).Select(x => gameInteraction.GetCardPower(x)).Sum();
+            int creatures = gameInteraction.GetPlayCards().Where(x => x.Creature).Count();
+
+            // this algorithm can IMPROVE a lot: TODO: what the fuss by such a simple card. If I do proper math
+            // probably there is a way to compute it immediatly without recursion. Also It should keeps int account
+            // the coming in to play of new creatures.
+            foreach (var ability in overseerAbilities)
+            {
+                // now the problem is that +1/+1 counters are cumulative, so a lesser damage is acceptable if following turns damage increase.
+                // thus we should simulate all possible outcomes that are a binary combinations so for 6 turns there are 64 combinations.
+                int ownerPower = gameInteraction.GetCardPower(ability.Owner);
+                int lifeLeft = gameInteraction.FoeLifeLeft();
+
+                var turns1 = SimulateOverseerRecursive(true, 0, totalDamageDealt, ownerPower, lifeLeft, 0, creatures);
+                var turns2 = SimulateOverseerRecursive(false, 0, totalDamageDealt, ownerPower, lifeLeft, 0, creatures);
+                if(turns2 < turns1)
+                {
+                    break; // creatures will all attack
+                }
+                else
+                {
+                    // activate abilities
+                    gameInteraction.ActivateAbility(ability);
+                }
+            }
         }
+
+        private int SimulateOverseerRecursive( bool tap, int turn, int totalDamage, int ownerPower, int lifeLeft, int counters, int creatures)
+        {
+            if (turn == 6)
+                return turn; // do not make simulation too deep.
+
+            int damageDealt = 0;
+            if(tap)
+            {
+                damageDealt = (totalDamage - ownerPower) + (creatures - 1) * (counters+1);
+            }
+            else
+            {
+                damageDealt = (totalDamage) + creatures * counters;
+            }
+
+            if(damageDealt>lifeLeft)
+                    return turn;
+
+            // simulate turns where this turn is tapping
+            var turns1 = SimulateOverseerRecursive( true, turn+1, totalDamage, ownerPower,lifeLeft - damageDealt, counters+1, creatures);
+
+            // simulate turns where this turn is not tapping
+            var turns2 = SimulateOverseerRecursive( false, turn+1, totalDamage, ownerPower,lifeLeft - damageDealt, counters, creatures);
+
+            if (turns2 < turns1)
+            {
+                return turns2;
+            }
+            else
+            {
+                return turns1;
+            }
+        }
+
+
+
+
 
         public List<Card> SelectCardsToPlay(IGameInteraction gameInteraction)
         {
@@ -302,21 +370,21 @@ namespace MTG.Game.Strategies
 
             // This function is called continuosly so.. Just check if there's one untapped creature
             // playing a springleaf drum is "free" if there is a creature into play
-            if(CreaturesICanTapAsCost(gameInteraction).Count()>=1 && cardsToPlay.Any() == false)
+            if (CreaturesICanTapAsCost(gameInteraction).Count() >= 1 && cardsToPlay.Any() == false)
             {
                 var aDrum = cardsInHand.Where(x => x.GetType() == typeof(SpringleafDrum)).FirstOrDefault();
-                if(aDrum != null)
+                if (aDrum != null)
                     cardsToPlay.Add(aDrum);
             }
 
-            if(cardsInPlay.Where(x => x.Creature).Any() && cardsToPlay.Any() == false)
+            if (cardsInPlay.Where(x => x.Creature).Any() && cardsToPlay.Any() == false)
             {
                 var aPlate = cardsInHand.Where(x => x.GetType() == typeof(CranialPlating)).FirstOrDefault();
-                if(aPlate!=null)
+                if (aPlate != null)
                     cardsToPlay.Add(aPlate);
             }
 
-            if(cardsInHand.Where( x => x.Creature).Any() && cardsToPlay.Any() == false)
+            if (cardsInHand.Where(x => x.Creature).Any() && cardsToPlay.Any() == false)
             {
                 var sortOrder = new Dictionary<Type, int>()
                 {
@@ -324,23 +392,23 @@ namespace MTG.Game.Strategies
                     {typeof(MyrEnforcer),           10},
                     {typeof(SojournersCompanion),   20},
                     {typeof(Frogmite),              30},
-                    {typeof(SignalPest),            40}       
+                    {typeof(SignalPest),            40}
                 };
 
                 var creaturesInplay = gameInteraction.GetPlayCards().Where(x => x.Creature).Count();
 
-                if(creaturesInplay>1)
+                if (creaturesInplay > 1)
                 {
                     sortOrder[typeof(SignalPest)] = 29;
                 }
 
-                if(creaturesInplay>3)
+                if (creaturesInplay > 3)
                 {
                     sortOrder[typeof(SignalPest)] = 9;
                 }
 
                 var creatures = cardsInHand.Where(x => x.Creature).OrderBy(
-                        x => sortOrder.ContainsKey(x.GetType())? sortOrder[x.GetType()] : 1000
+                        x => sortOrder.ContainsKey(x.GetType()) ? sortOrder[x.GetType()] : 1000
                     );
 
                 cardsToPlay.AddRange(creatures);
@@ -348,14 +416,14 @@ namespace MTG.Game.Strategies
 
             // if no cards "by strategy" to play just sort by mana cost to play anyway something. Assuming bigger cost
             // is better card.. Bad Idea. If I start by lower cost I may benefit from affinity... Or no? StrategyVariable TODO:
-            if (cardsToPlay.Count == 0) 
+            if (cardsToPlay.Count == 0)
             {
-                if(StrategyVariables.PlayLeftOverCardsFromCheaper)
+                if (StrategyVariables.PlayLeftOverCardsFromCheaper)
                     cardsToPlay = cardsInHand.Where(x => x.ManaCost != null).OrderBy(x => x.ManaCost.ConvertedManaValue()).ToList();
                 else
                     cardsToPlay = cardsInHand.Where(x => x.ManaCost != null).OrderByDescending(x => x.ManaCost.ConvertedManaValue()).ToList();
             }
-                
+
 
             return cardsToPlay;
         }
@@ -396,14 +464,14 @@ namespace MTG.Game.Strategies
 
             var spring = gameInteraction.GetPlayCards().Where(x => x.GetType() == typeof(SpringleafDrum)).Any();
 
-            if(spring)
+            if (spring)
             {
                 sortOrder[typeof(SpringleafDrum)] = 2;
                 sortOrder[typeof(SignalPest)] = 1;
             }
 
-            var cards = gameInteraction.GetGrimoireCards().Where( x => filter(x))
-                .OrderBy( x=> sortOrder.ContainsKey(x.GetType())? sortOrder[x.GetType()] : 1000);
+            var cards = gameInteraction.GetGrimoireCards().Where(x => filter(x))
+                .OrderBy(x => sortOrder.ContainsKey(x.GetType()) ? sortOrder[x.GetType()] : 1000);
 
             if (cards.Any())
                 return cards.First();
