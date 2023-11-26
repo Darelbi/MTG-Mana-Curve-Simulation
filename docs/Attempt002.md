@@ -1,5 +1,6 @@
 Starting Optimization: with initial deck
 
+
  - 4    x Ornithopter
  - 4    x Memnite
  - 4    x Myr Enforcer
@@ -17,6 +18,7 @@ Starting Optimization: with initial deck
  - 4    x Darksteel Citadel
  - 4    x Glimmervoid
 
+
  - Removed: Thought Monitor, Added:Lotus Petal (AWT: 5,22864)
  - Removed: Myr Enforcer, Added:Island (AWT: 5,20332)
  - Removed: Sojourner's Companion, Added:Signal Pest (AWT: 5,17784)
@@ -29,7 +31,9 @@ Starting Optimization: with initial deck
  - Removed: Thought Monitor, Added:Island (AWT: 5,0722)
  - Removed: Sojourner's Companion, Added:Island (AWT: 5,0696)
 
+
 Ended Optimization: with final deck
+
 
  - 4    x Ornithopter
  - 4    x Memnite
@@ -50,3 +54,10 @@ Ended Optimization: with final deck
  - 4    x Island
  - 4    x Signal Pest
  - 2    x Steel Overseer
+
+The second optimization really makes sense, now basically I must check if I can
+improve with other kind of cards like Fling, Atog, Great Furnace, Silverbluff 
+Bridge, Mountain, Paradise Mantle, Welding Jar.
+
+Also I should check a simulation where creatures with attack 3 or less do not 
+attack since 4/4 creatures are very common nowadays.
