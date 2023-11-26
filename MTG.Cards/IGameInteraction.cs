@@ -1,4 +1,5 @@
 ﻿using MTG.Cards.Cards.ActivatedAbilities;
+using MTG.Cards.Cards.Effects;
 using System.Collections.ObjectModel;
 
 namespace MTG.Cards
@@ -29,5 +30,7 @@ namespace MTG.Cards
         int FoeLifeLeft();
         void Equip(Card equipment);
         void FindCardToPlayFromDeck(Card source, Func<Card, bool> filter);
+        List<Card> GetArtifactsICanSacrifice();
+        void AddUntilEndOfTurnEffects(IEffect effect);
     }
 }

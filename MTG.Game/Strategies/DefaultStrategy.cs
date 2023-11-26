@@ -479,5 +479,13 @@ namespace MTG.Game.Strategies
             return null;
         }
 
+        public List<Card> GetArtifactsICanSacrifice(IGameInteraction gameInteraction)
+        {
+            return gameInteraction.GetPlayCards().Where(x => x.Artifact).Where(
+                x => (x.Creature && gameInteraction.GetCardPower(x) <= 1)
+                    || (!x.Creature && x.GetType() !=typeof(CranialPlating)))
+                
+                .ToList();
+        }
     }
 }

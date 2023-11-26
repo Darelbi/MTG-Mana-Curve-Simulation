@@ -8,9 +8,17 @@ namespace MTG.Game
     {
         private readonly List<IEffect> EffectsStack; //TODO: use dictionary
 
+        private readonly List<IEffect> UntilEndOfTurnEffectsStack; //TODO: use dictionary
+
         public Effects()
         {
             EffectsStack = new List<IEffect>();
+            UntilEndOfTurnEffectsStack = new List<IEffect>();
+        }
+
+        public List<IEffect> AllEffects()
+        {
+            return EffectsStack.ToList().Concat(UntilEndOfTurnEffectsStack).ToList();
         }
 
         public void CardEnterPlay(Card card)
@@ -31,7 +39,7 @@ namespace MTG.Game
 
         public int GetPowerIncreaseForCard(Card card, IGameInteraction interaction)
         {
-            var powerEffects = EffectsStack
+            var powerEffects = AllEffects()
                 .Where(x => x.GetType().IsAssignableTo(typeof(IPowerIncreaseEffect)))
                 .Select( x => (IPowerIncreaseEffect) x)
                 .Where( x => x.BenefitsOfPower(x.Owner, interaction, card)).ToList();
@@ -43,7 +51,7 @@ namespace MTG.Game
 
         public int GetToughnessIncreaseForCard(Card card, IGameInteraction interaction)
         {
-            var toughnessEffects = EffectsStack
+            var toughnessEffects = AllEffects()
                 .Where(x => x.GetType().IsAssignableTo(typeof(IPowerIncreaseEffect)))
                 .Select(x => (IToughnessIncreaseEffect)x)
                 .Where(x => x.BenefitsOfToughness(x.Owner, interaction, card)).ToList();
@@ -53,15 +61,25 @@ namespace MTG.Game
             return toughnessEffects.Select(x => x.GetToughness(x.Owner, interaction, card)).Sum();
         }
 
-        internal void AddTemporaryEffects(List<IEffect> attacckEffects)
+        public void AddAttackPhaseEffects(List<IEffect> attacckEffects)
         {
             EffectsStack.AddRange(attacckEffects);
         }
 
-        internal void RemoveTemporaryEffects(List<IEffect> attacckEffects)
+        public void AddUntilEndOfTurnEffects(IEffect effect)
+        {
+            UntilEndOfTurnEffectsStack.Add(effect);
+        }
+
+        public void RemoveAttackPhaseEffects(List<IEffect> attacckEffects)
         {
             foreach(var effect in attacckEffects)
                 EffectsStack.Remove(effect); 
+        }
+
+        public void RemoveUntilEndOfTurnEffects()
+        {
+            UntilEndOfTurnEffectsStack.Clear();
         }
     }
 }

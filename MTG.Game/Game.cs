@@ -1,5 +1,6 @@
 ﻿using MTG.Cards;
 using MTG.Cards.Cards.ActivatedAbilities;
+using MTG.Cards.Cards.Effects;
 using MTG.Cards.Cards.Feats;
 using MTG.Cards.Cards.Sorceries;
 using MTG.Game.Utils;
@@ -133,6 +134,8 @@ namespace MTG.Game
                 play.Remove(card);
                 grave.Add(card);
             }
+
+            effects.RemoveUntilEndOfTurnEffects();
         }
 
         private void CombatPhase()
@@ -147,7 +150,7 @@ namespace MTG.Game
                 x => x.AttackPhaseEffects!= null && x.AttackPhaseEffects.Count>0)
                 .Select(x => x.AttackPhaseEffects).SelectMany( x=>x).ToList();
 
-            effects.AddTemporaryEffects(attacckEffects);
+            effects.AddAttackPhaseEffects(attacckEffects);
 
             foreach(var attack in attacking)
             {
@@ -160,7 +163,7 @@ namespace MTG.Game
                 attack.Status_Attacking = false;
             }
 
-            effects.RemoveTemporaryEffects(attacckEffects);
+            effects.RemoveAttackPhaseEffects(attacckEffects);
         }
 
         private void MainPhase()
@@ -571,6 +574,16 @@ namespace MTG.Game
         public int FoeLifeLeft()
         {
             return 30 - damageDealt;
+        }
+
+        public List<Card> GetArtifactsICanSacrifice()
+        {
+            return strategy.GetArtifactsICanSacrifice(this);
+        }
+
+        public void AddUntilEndOfTurnEffects(IEffect effect)
+        {
+            effects.AddUntilEndOfTurnEffects(effect);
         }
     }
 }
