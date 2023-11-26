@@ -6,6 +6,7 @@ using MTG.Cards.Cards.Creatures;
 using MTG.Cards.Cards.Creatures.Abilities;
 using MTG.Cards.Cards.Lands;
 using MTG.Cards.Cards.Lands.Abilities;
+using MTG.Cards.Cards.Tokens;
 using MTG.Game.Utils;
 using MTG.Mana;
 
@@ -316,6 +317,29 @@ namespace MTG.Game.Strategies
                     gameInteraction.ActivateAbility(ability);
                 }
             }
+
+            var atogAbility = abilities.Where(x => x.GetType() == typeof(AtogAbility)).FirstOrDefault(); //just activate one atog
+            if(atogAbility!=null)
+            {
+                var artifacts = GetArtifactsICanSacrifice(gameInteraction);
+                var artifactcount = artifacts.Count();
+
+                if(artifactcount > 0 &&(gameInteraction.FoeLifeLeft() < artifactcount * 2))
+                {
+                    //interested in activating atog ability: however there are still conditions
+                    int powerhouses = gameInteraction.GetPlayCards().Where(x => x.GetType() == typeof(Construct)
+                                               || x.GetType() == typeof(MasterOfEtherium) || x.GetType() == typeof(CranialPlating)).Count();
+
+                    // sacrificing artifacts when there are 2 ore more powerhouses in play actually reduce total attack power.
+                    if((powerhouses==0) || (powerhouses == 1 && gameInteraction.FoeLifeLeft() < artifactcount))
+                    {
+                        foreach(var artifact in artifacts)
+                        {
+                            gameInteraction.ActivateAbility(atogAbility);
+                        }
+                    }
+                }
+            }
         }
 
         private int SimulateOverseerRecursive( bool tap, int turn, int totalDamage, int ownerPower, int lifeLeft, int counters, int creatures)
@@ -351,10 +375,6 @@ namespace MTG.Game.Strategies
                 return turns1;
             }
         }
-
-
-
-
 
         public List<Card> SelectCardsToPlay(IGameInteraction gameInteraction)
         {
@@ -392,7 +412,8 @@ namespace MTG.Game.Strategies
                     {typeof(MyrEnforcer),           10},
                     {typeof(SojournersCompanion),   20},
                     {typeof(Frogmite),              30},
-                    {typeof(SignalPest),            40}
+                    {typeof(SignalPest),            40},
+                    {typeof(Atog),                  50}    
                 };
 
                 var creaturesInplay = gameInteraction.GetPlayCards().Where(x => x.Creature).Count();
