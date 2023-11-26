@@ -34,6 +34,7 @@ namespace MTG.Cards
 
         public bool Status_Tapped { get; set; }
         public bool Status_Weakness { get; set; }
+        public bool Status_Attacking { get; set; }
 
         /// <summary>
         /// Features allows to do calculations that are card specific
@@ -56,6 +57,11 @@ namespace MTG.Cards
         /// Effects this cards keeps active while in play
         /// </summary>
         public List<IEffect> Effects { get; set; } = new List<IEffect>();
+
+        /// <summary>
+        /// Effects active only during combat phase
+        /// </summary>
+        public List<IEffect> AttackPhaseEffects { get; set; } = new List<IEffect>();
 
         /// <summary>
         /// How many +1/+1 tokens are on this creature

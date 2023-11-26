@@ -58,6 +58,37 @@ namespace MTG.UnitTests
         }
 
         [TestMethod]
+        public void TestSignalPestDamage()
+        {
+            var grimoire =
+            TestUtils.SetupDeck(    new Ornithopter(),
+                                    new Ornithopter(),
+                                    new SignalPest(),
+                                    new SeatOfTheSynod(),
+
+                                    new SignalPest(),
+                                    new Frogmite()
+                                    );
+
+            var game = new Game.Game(grimoire, new DefaultStrategy(), true);
+            game.BeginTestGame(4);
+
+            // Turn 1
+            game.Turn();
+            Assert.IsTrue(game.GetPlayCards().Count() == 4);
+
+            // Turn 2
+            game.Turn();
+            Assert.IsTrue(game.PlayedCards(new SignalPest()));
+            Assert.AreEqual(2, game.TotalDamageDealt());
+
+            // Turn 3
+            game.Turn();
+            Assert.IsTrue(game.PlayedCards(new Frogmite()));
+            Assert.AreEqual(8, game.TotalDamageDealt());
+        }
+
+        [TestMethod]
         public void TestMasterOfEtheriumDamage()
         {
             var grimoire =

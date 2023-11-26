@@ -321,10 +321,23 @@ namespace MTG.Game.Strategies
                 var sortOrder = new Dictionary<Type, int>()
                 {
                     {typeof(MasterOfEtherium),      0},
-                    {typeof(MyrEnforcer),           1},
-                    {typeof(SojournersCompanion),   2},
-                    {typeof(Frogmite),              3}
+                    {typeof(MyrEnforcer),           10},
+                    {typeof(SojournersCompanion),   20},
+                    {typeof(Frogmite),              30},
+                    {typeof(SignalPest),            40}       
                 };
+
+                var creaturesInplay = gameInteraction.GetPlayCards().Where(x => x.Creature).Count();
+
+                if(creaturesInplay>1)
+                {
+                    sortOrder[typeof(SignalPest)] = 29;
+                }
+
+                if(creaturesInplay>3)
+                {
+                    sortOrder[typeof(SignalPest)] = 9;
+                }
 
                 var creatures = cardsInHand.Where(x => x.Creature).OrderBy(
                         x => sortOrder.ContainsKey(x.GetType())? sortOrder[x.GetType()] : 1000
@@ -360,7 +373,9 @@ namespace MTG.Game.Strategies
             var playCards = gameInteraction.GetPlayCards();
 
             var cards = playCards.Where(x => x.Creature && gameInteraction.GetCardPower(x) <= 2 && x.Status_Tapped == false);
-            var finalCards = cards.OrderBy(x => gameInteraction.GetCardPower(x)).ToList();
+            var finalCards = cards
+                .OrderBy(x => x.AttackPhaseEffects.Count)
+                .OrderBy(x => gameInteraction.GetCardPower(x)).ToList();
             return finalCards;
         }
 
@@ -375,8 +390,17 @@ namespace MTG.Game.Strategies
                 {
                     {typeof(SolRing),               0},
                     {typeof(SpringleafDrum),        1},
-                    {typeof(Ornithopter),           2}
+                    {typeof(SignalPest),            2},
+                    {typeof(Ornithopter),           3}
                 };
+
+            var spring = gameInteraction.GetPlayCards().Where(x => x.GetType() == typeof(SpringleafDrum)).Any();
+
+            if(spring)
+            {
+                sortOrder[typeof(SpringleafDrum)] = 2;
+                sortOrder[typeof(SignalPest)] = 1;
+            }
 
             var cards = gameInteraction.GetGrimoireCards().Where( x => filter(x))
                 .OrderBy( x=> sortOrder.ContainsKey(x.GetType())? sortOrder[x.GetType()] : 1000);

@@ -1,5 +1,6 @@
 ﻿using MTG.Cards;
 using MTG.Cards.Cards.ActivatedAbilities;
+using MTG.Cards.Cards.Effects;
 using MTG.Cards.Cards.Feats;
 using MTG.Cards.Cards.Sorceries;
 using MTG.Game.Utils;
@@ -141,15 +142,26 @@ namespace MTG.Game
             var attacking = play.Where(
                 x => x.Creature 
                 && x.Status_Tapped == false
-                && GetCardPower(x) > 0
                 && x.Status_Weakness == false);
+
+            var attacckEffects = attacking.Where(
+                x => x.AttackPhaseEffects!= null && x.AttackPhaseEffects.Count>0)
+                .Select(x => x.AttackPhaseEffects).SelectMany( x=>x).ToList();
+
+            effects.AddTemporaryEffects(attacckEffects);
 
             foreach(var attack in attacking)
             {
+                attack.Status_Attacking = true;
+
                 damageDealt += GetCardPower(attack);
                 if (attack.AttackWithoutTapping == false)
                     attack.Status_Tapped = true;
+
+                attack.Status_Attacking = false;
             }
+
+            effects.RemoveTemporaryEffects(attacckEffects);
         }
 
         private void MainPhase()

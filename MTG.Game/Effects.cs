@@ -52,5 +52,16 @@ namespace MTG.Game
 
             return toughnessEffects.Select(x => x.GetToughness(x.Owner, interaction, card)).Sum();
         }
+
+        internal void AddTemporaryEffects(List<IEffect> attacckEffects)
+        {
+            EffectsStack.AddRange(attacckEffects);
+        }
+
+        internal void RemoveTemporaryEffects(List<IEffect> attacckEffects)
+        {
+            foreach(var effect in attacckEffects)
+                EffectsStack.Remove(effect); 
+        }
     }
 }
