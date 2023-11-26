@@ -82,6 +82,8 @@
 
         public static int ManaComplexity(this Mana mana)
         {
+            if (mana.ConvertedManaValue() == mana.TotalColorlessValue())
+                return -1; //spend colorless mana first
             return mana.Or.Count;
         }
 

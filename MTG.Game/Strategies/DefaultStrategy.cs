@@ -307,7 +307,7 @@ namespace MTG.Game.Strategies
 
                 var turns1 = SimulateOverseerRecursive(true, 0, totalDamageDealt, ownerPower, lifeLeft, 0, creatures);
                 var turns2 = SimulateOverseerRecursive(false, 0, totalDamageDealt, ownerPower, lifeLeft, 0, creatures);
-                if(turns2 < turns1)
+                if (turns2 < turns1)
                 {
                     break; // creatures will all attack
                 }
@@ -319,52 +319,56 @@ namespace MTG.Game.Strategies
             }
 
             var atogAbility = abilities.Where(x => x.GetType() == typeof(AtogAbility)).FirstOrDefault(); //just activate one atog
-            if(atogAbility!=null)
+            if (atogAbility != null && atogAbility.Owner.Status_Tapped == false && atogAbility.Owner.Status_Weakness == false)
             {
                 var artifacts = GetArtifactsICanSacrifice(gameInteraction);
+                var sacrificedDamage = artifacts.Where(x => gameInteraction.GetCardPower(x) == 1).Count();
                 var artifactcount = artifacts.Count();
+                //interested in activating atog ability: however there are still conditions
+                int powerhouses = gameInteraction.GetPlayCards().Where(x => x.GetType() == typeof(Construct)
+                                           || x.GetType() == typeof(MasterOfEtherium) || x.GetType() == typeof(CranialPlating)).Count();
 
-                if(artifactcount > 0 &&(gameInteraction.FoeLifeLeft() < artifactcount * 2))
+
+
+                if (powerhouses < 2 &&
+                    artifactcount > 0 && (gameInteraction.FoeLifeLeft() <
+                                                                       (artifactcount * 2 + totalDamageDealt - artifactcount * powerhouses - sacrificedDamage)
+                                         )
+                                          )
                 {
-                    //interested in activating atog ability: however there are still conditions
-                    int powerhouses = gameInteraction.GetPlayCards().Where(x => x.GetType() == typeof(Construct)
-                                               || x.GetType() == typeof(MasterOfEtherium) || x.GetType() == typeof(CranialPlating)).Count();
 
-                    // sacrificing artifacts when there are 2 ore more powerhouses in play actually reduce total attack power.
-                    if((powerhouses==0) || (powerhouses == 1 && gameInteraction.FoeLifeLeft() < artifactcount))
+                    foreach (var artifact in artifacts)
                     {
-                        foreach(var artifact in artifacts)
-                        {
-                            gameInteraction.ActivateAbility(atogAbility);
-                        }
+                        gameInteraction.ActivateAbility(atogAbility);
                     }
+
                 }
             }
         }
 
-        private int SimulateOverseerRecursive( bool tap, int turn, int totalDamage, int ownerPower, int lifeLeft, int counters, int creatures)
+        private int SimulateOverseerRecursive(bool tap, int turn, int totalDamage, int ownerPower, int lifeLeft, int counters, int creatures)
         {
             if (turn == 6)
                 return turn; // do not make simulation too deep.
 
             int damageDealt = 0;
-            if(tap)
+            if (tap)
             {
-                damageDealt = (totalDamage - ownerPower) + (creatures - 1) * (counters+1);
+                damageDealt = (totalDamage - ownerPower) + (creatures - 1) * (counters + 1);
             }
             else
             {
                 damageDealt = (totalDamage) + creatures * counters;
             }
 
-            if(damageDealt>lifeLeft)
-                    return turn;
+            if (damageDealt > lifeLeft)
+                return turn;
 
             // simulate turns where this turn is tapping
-            var turns1 = SimulateOverseerRecursive( true, turn+1, totalDamage, ownerPower,lifeLeft - damageDealt, counters+1, creatures);
+            var turns1 = SimulateOverseerRecursive(true, turn + 1, totalDamage, ownerPower, lifeLeft - damageDealt, counters + 1, creatures);
 
             // simulate turns where this turn is not tapping
-            var turns2 = SimulateOverseerRecursive( false, turn+1, totalDamage, ownerPower,lifeLeft - damageDealt, counters, creatures);
+            var turns2 = SimulateOverseerRecursive(false, turn + 1, totalDamage, ownerPower, lifeLeft - damageDealt, counters, creatures);
 
             if (turns2 < turns1)
             {
@@ -413,7 +417,7 @@ namespace MTG.Game.Strategies
                     {typeof(SojournersCompanion),   20},
                     {typeof(Frogmite),              30},
                     {typeof(SignalPest),            40},
-                    {typeof(Atog),                  50}    
+                    {typeof(Atog),                  50}
                 };
 
                 var creaturesInplay = gameInteraction.GetPlayCards().Where(x => x.Creature).Count();
@@ -504,8 +508,8 @@ namespace MTG.Game.Strategies
         {
             return gameInteraction.GetPlayCards().Where(x => x.Artifact).Where(
                 x => (x.Creature && gameInteraction.GetCardPower(x) <= 1)
-                    || (!x.Creature && x.GetType() !=typeof(CranialPlating)))
-                
+                    || (!x.Creature && x.GetType() != typeof(CranialPlating)))
+
                 .ToList();
         }
     }
