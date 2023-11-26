@@ -111,3 +111,7 @@ Ended Optimization: with final deck
  - 2    x Steel Overseer
  - 1    x Sojourner's Companion
 Total: 60 Total Cards
+
+
+Deck 2 (the last one) is better by delta-AWT:0,00605
+So in the end, the Lotus petal was removed for a fraction of turn
