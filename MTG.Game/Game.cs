@@ -2,6 +2,7 @@
 using MTG.Cards.Cards.ActivatedAbilities;
 using MTG.Cards.Cards.Effects;
 using MTG.Cards.Cards.Feats;
+using MTG.Cards.Cards.Lands;
 using MTG.Cards.Cards.Sorceries;
 using MTG.Game.Utils;
 using MTG.Mana;
@@ -410,19 +411,21 @@ namespace MTG.Game
             }
 
             List<Card> toTap = new();
-            var sorted = manaSources
+            var sortedSources = manaSources
                 // Pay first sources that do not have additional costs regardless if we can pay the cost
-                .OrderBy(x => x.ManaSourcePrice != null)
-                .OrderByDescending(x => x.ManaSource.ConvertedManaValue())
+                .Where( x => x.GetType() != typeof(UrzasSaga) || (x.GetType() == typeof(UrzasSaga) && x.LoreCounter <=1))
+                .OrderBy( x => x.GetType() == typeof(UrzasSaga))
+                .ThenBy(x => x.ManaSourcePrice != null)
+                .ThenByDescending(x => x.ManaSource.ConvertedManaValue())
                 .ThenBy(x => x.ManaSource.ManaComplexity()).ToList();
 
             int blue = manaCost.TotalBlueValue();
             for (int i = 0; i < blue; i++)
-                if (sorted.Any(x => x.ManaSource.HaveBlue())) // why not a enum for colors? sigh
+                if (sortedSources.Any(x => x.ManaSource.HaveBlue())) // why not a enum for colors? sigh
                 {
-                    var card = sorted.First(x => x.ManaSource.HaveBlue());
+                    var card = sortedSources.First(x => x.ManaSource.HaveBlue());
                     toTap.Add(card);
-                    sorted.Remove(card);
+                    sortedSources.Remove(card);
                 }
                 else
                 {
@@ -431,11 +434,11 @@ namespace MTG.Game
 
             int black = manaCost.TotalBlackValue();
             for (int i = 0; i < black; i++)
-                if (sorted.Any(x => x.ManaSource.HaveBlack()))
+                if (sortedSources.Any(x => x.ManaSource.HaveBlack()))
                 {
-                    var card = sorted.First(x => x.ManaSource.HaveBlack());
+                    var card = sortedSources.First(x => x.ManaSource.HaveBlack());
                     toTap.Add(card);
-                    sorted.Remove(card);
+                    sortedSources.Remove(card);
                 }
                 else
                 {
@@ -444,11 +447,11 @@ namespace MTG.Game
 
             int red = manaCost.TotalRedValue();
             for (int i = 0; i < red; i++)
-                if (sorted.Any(x => x.ManaSource.HaveRed()))
+                if (sortedSources.Any(x => x.ManaSource.HaveRed()))
                 {
-                    var card = sorted.First(x => x.ManaSource.HaveRed());
+                    var card = sortedSources.First(x => x.ManaSource.HaveRed());
                     toTap.Add(card);
-                    sorted.Remove(card);
+                    sortedSources.Remove(card);
                 }
                 else
                 {
@@ -465,18 +468,19 @@ namespace MTG.Game
 
             for (int i = 0; i < colorless;)
             {
-                var card = sorted.FirstOrDefault();
+                var card = sortedSources.FirstOrDefault();
                 if (card == null)
                     return null;
 
                 // I tap anyway. TODO: should do more complex check because there are mana sources that tap more than 1 mana
                 // in this way I could end up using Sol Ring to pay for springleaf Drum... that's ok for now
-                // the average case is triggering ability of Urza Saga with Sol ring.
+                // the average case is triggering ability of Urza Saga with Sol ring. TODO: that's why the simulation removed
+                // springleaf drum from deck. I need to implements leftover mana
                 int tappedMana = card.ManaSource.ConvertedManaValue();
                 i += tappedMana;
 
                 toTap.Add(card);
-                sorted.Remove(card);
+                sortedSources.Remove(card);
             }
 
             return toTap;
