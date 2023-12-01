@@ -150,6 +150,34 @@ tryList2.AddCards(2, () => new SpringleafDrum());
 tryList2.AddCards(3, () => new SojournersCompanion());
 tryList2.AddCards(2, () => new Island());
 
-DeckOptimizer optimizer2 = new(thirdDeck, tryList2);
-optimizer2.Run();
+//DeckOptimizer optimizer2 = new(thirdDeck, tryList2);
+//optimizer2.Run();
 
+
+var fourthDeck = new Deck();
+
+fourthDeck.AddCards(4, () => new Ornithopter());//
+fourthDeck.AddCards(4, () => new Memnite());//
+fourthDeck.AddCards(1, () => new ThoughtMonitor());//
+fourthDeck.AddCards(4, () => new MasterOfEtherium());//
+fourthDeck.AddCards(4, () => new Frogmite());//
+fourthDeck.AddCards(4, () => new SignalPest());//
+fourthDeck.AddCards(4, () => new SteelOverseer());//
+
+fourthDeck.AddCards(4, () => new CranialPlating());//
+fourthDeck.AddCards(4, () => new SpringleafDrum());//
+fourthDeck.AddCards(1, () => new SolRing());
+
+fourthDeck.AddCards(4, () => new UrzasSaga());//
+fourthDeck.AddCards(1, () => new GreatFurnace());//
+fourthDeck.AddCards(4, () => new VaultOfWhispers());//
+fourthDeck.AddCards(4, () => new SeatOfTheSynod());//
+fourthDeck.AddCards(4, () => new DarksteelCitadel());//
+fourthDeck.AddCards(4, () => new Glimmervoid());////
+fourthDeck.AddCards(5, () => new Island());//
+
+var sideBoardFind = new Deck();
+sideBoardFind.AddCards(10, () => new Placeholder1());
+
+DeckSideboardFinder deckSideboardFinder = new(fourthDeck, sideBoardFind);
+deckSideboardFinder.Run();
