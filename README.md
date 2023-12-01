@@ -166,23 +166,24 @@ into account "controlling" effects. But this is the starting mana curve base.
  - Frogmite
  
  
- I did also a Excell chart to visualize the worsening
+ I did also a Excell chart to visualize the worsening of AWT by increasing
+ amount of sideboard added cards.
  
- Here are the results:
-
- The simulation shows that having the Lotus Petal is almost the same as not having
+ [<img src="https://github.com/Darelbi/MTG-Mana-Curve-Simulation/blob/main/docs/sideboardAWT.png?raw=true">](https://github.com/Darelbi/MTG-Mana-Curve-Simulation/blob/main/docs/sideboardAWT.png)
+ 
+ 
+ ## Other findings
+ 
+  - The simulation shows that having the Lotus Petal is almost the same as not having
  it. The simulation shows the difference of AWT (Average Winning Turn) with lotus petal
  is **slightly** worse (~0,01).
 
- The simulation also shows that Thoughtcast, and Atog, are useless
+ - The simulation also shows that Thoughtcast, and Atog, are useless
 
- Also the cards that impact less upon removal are
-
- - 2	x Island 
- - 1    x Sojourner's Companion
- - 2    x Thought Monitor
-
- Which are the canditates for being swapped with the Sideboard
+ - Unearth is unnecessary if you use welding jar.
+ 
+ - Mistvault Bridge isn't that bad, it was included in the first version of the deck,
+ only removed in the second version
 
 
 ## Running the Simulation
