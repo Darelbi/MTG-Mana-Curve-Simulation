@@ -9,6 +9,7 @@ using MTG.Cards.Cards.Lands.Abilities;
 using MTG.Cards.Cards.Tokens;
 using MTG.Game.Utils;
 using MTG.Mana;
+using System.Reflection;
 
 namespace MTG.Game.Strategies
 {
@@ -238,7 +239,10 @@ namespace MTG.Game.Strategies
 
         public bool ShouldMulligan(List<Card> hand)
         {
-            return !HaveDesiredCards(hand);
+            if (StrategyVariables.OldMulligan)
+                return !HaveDesiredCards(hand);
+            else
+                return !HaveDesiredCardsNew(hand);
         }
 
         private bool HaveDesiredCards(List<Card> hand)
@@ -256,6 +260,64 @@ namespace MTG.Game.Strategies
                 return false;
 
             return mana >= 2 && mana <= 3 && creatures > 0 && powerhouses > 0;
+        }
+
+        private bool HaveDesiredCardsNew(List<Card> hand)
+        {
+            //for combo decks mulligan choice is pretty simple
+            // just check there are certain combinations of card
+            // in affinity we just want 2 or 3 lands and one power combination
+            // (1 creature + cranial plaiting || one power creature like urza saga or master of etherium)
+            var mana = DesiredMana(hand);
+            var creatures = hand.Where(x => x.Creature).Count();
+            var powerhouses = hand.Where(x => x.GetType() == typeof(UrzasSaga) || x.GetType() == typeof(CranialPlating)
+            || x.GetType() == typeof(MasterOfEtherium) || x.GetType() == typeof(SteelOverseer)).Count();
+
+            bool urza = false;
+            if(hand.Any( x => x.GetType() == typeof(UrzasSaga)))
+            {
+                urza = mana >= 2 && creatures >= 1;
+            }
+
+            bool cranial = false;
+            if(hand.Any(x => x.GetType() ==typeof(CranialPlating)))
+            {
+                cranial = creatures >= 2;
+                if (hand.Where(x => x.Creature).All(x => x.GetType() == typeof(MasterOfEtherium)))
+                    cranial = creatures >= 2 && mana >= 3;
+                else
+                    cranial = creatures >= 2 && mana >= 2;
+            }
+
+            bool master = false;
+            if(hand.Any( x=> x.GetType() == typeof(MasterOfEtherium)))
+            {
+                master = creatures>=2 && mana>=3;
+            }
+
+            bool overseer = false;
+            if(hand.Any( x=> x.GetType() == typeof(SteelOverseer)))
+            {
+                overseer = creatures >= 3 && mana>=2;
+            }
+
+            return overseer || master || cranial || urza;
+        }
+
+        private int DesiredMana(List<Card> hand)
+        {
+            // just lands
+            var lands = hand.Where(x => x.ManaSource != null && x.Land && x.GetType() != typeof(UrzasSaga)).Count();
+
+            var solRing = hand.Where(x => x.GetType() == typeof(SolRing)).Count();
+            var drums = hand.Where(x => x.GetType() == typeof(SpringleafDrum)).Count();
+            var manaCreatures = hand.Select(x => x.GetType())
+                .Count(x => x == typeof(Ornithopter) || x == typeof(Memnite) || x== typeof(SignalPest));
+
+            if (lands >= 1)
+                return lands + 2 * solRing + Math.Min(drums, manaCreatures);
+
+            return 0;
         }
 
         public Card SelectCreatureToEquip(Card equipment, IGameInteraction gameInteraction)

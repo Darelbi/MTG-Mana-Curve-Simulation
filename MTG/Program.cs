@@ -3,6 +3,7 @@ using MTG.Cards.Cards.Creatures;
 using MTG.Cards.Cards.Lands;
 using MTG.Cards.Cards.Sorceries;
 using MTG.Game;
+using MTG.Game.Strategies;
 
 var starting = new Deck();
 var tryList = new Deck();
@@ -97,5 +98,58 @@ secondDeck.AddCards(4, () => new Island());//
 secondDeck.AddCards(4, () => new SignalPest());//
 secondDeck.AddCards(2, () => new SteelOverseer());//
 
-var comparison = new CompareTwoDecks(firstDeck
-    , secondDeck);
+//var comparison = new CompareTwoDecks(
+//    firstDeck
+//    , secondDeck, () => StrategyVariables.OldMulligan = true, () => StrategyVariables.OldMulligan = true);
+
+
+////////// TAYLOR THE STRATEGY
+///
+var thirdDeck = new Deck();
+
+thirdDeck.AddCards(4, () => new Ornithopter());//
+thirdDeck.AddCards(4, () => new Memnite());//
+thirdDeck.AddCards(2, () => new ThoughtMonitor());//
+thirdDeck.AddCards(4, () => new MasterOfEtherium());//
+thirdDeck.AddCards(4, () => new Frogmite());//
+thirdDeck.AddCards(1, () => new SojournersCompanion());//
+thirdDeck.AddCards(4, () => new SignalPest());//
+thirdDeck.AddCards(2, () => new SteelOverseer());//
+
+thirdDeck.AddCards(4, () => new CranialPlating());//
+thirdDeck.AddCards(2, () => new SpringleafDrum());//
+thirdDeck.AddCards(1, () => new SolRing());
+
+thirdDeck.AddCards(4, () => new UrzasSaga());//
+thirdDeck.AddCards(1, () => new GreatFurnace());//
+thirdDeck.AddCards(4, () => new VaultOfWhispers());//
+thirdDeck.AddCards(3, () => new MistvaultBridge());//
+thirdDeck.AddCards(4, () => new SeatOfTheSynod());//
+thirdDeck.AddCards(4, () => new DarksteelCitadel());//
+thirdDeck.AddCards(4, () => new Glimmervoid());////
+thirdDeck.AddCards(4, () => new Island());//
+
+
+// deck2 (strategy 2) better because AWT = 4.985
+//var comparison2 = new CompareTwoDecks(
+//    thirdDeck
+//    , thirdDeck, () => StrategyVariables.OldMulligan = true, () => StrategyVariables.OldMulligan = false);
+
+// now retaylor the deck with the new strategy
+
+StrategyVariables.OldMulligan = false;
+
+var tryList2 = new Deck();
+
+tryList2.AddCards(2, () => new SteelOverseer());
+tryList2.AddCards(2, () => new ThoughtMonitor());
+tryList2.AddCards(4, () => new Thoughtcast());
+tryList2.AddCards(1, () => new LotusPetal());
+tryList2.AddCards(1, () => new MistvaultBridge());
+tryList2.AddCards(2, () => new SpringleafDrum());
+tryList2.AddCards(3, () => new SojournersCompanion());
+tryList2.AddCards(2, () => new Island());
+
+DeckOptimizer optimizer2 = new(thirdDeck, tryList2);
+optimizer2.Run();
+

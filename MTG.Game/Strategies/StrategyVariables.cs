@@ -10,5 +10,26 @@
 
         // in which order playing cards that were skipped by the strategy selection (if any)
         public static bool PlayLeftOverCardsFromCheaper = false;
+
+        // old mulligan
+        public static bool OldMulligan = true;
+
+        // STATS:
+
+        public static int MulliganTo6 = 0;
+
+        public static int MulliganTo5 = 0;
+
+        public static int WantedToMulliganTo4 = 0;
+
+        public static int WontAt3 = 0;
+
+        public static int WonAt4 = 0;
+
+        public static int WonAt5 = 0;
+
+        public static int WonAt6 = 0;
+
+        public static int WontAt7OrMore = 0;
     }
 }
