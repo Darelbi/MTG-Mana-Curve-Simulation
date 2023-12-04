@@ -12,7 +12,7 @@
         public static bool PlayLeftOverCardsFromCheaper = false;
 
         // old mulligan
-        public static bool OldMulligan = true;
+        public static bool OldMulligan = false;
 
         // STATS:
 
