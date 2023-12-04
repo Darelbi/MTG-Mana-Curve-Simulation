@@ -1,7 +1,6 @@
 using MTG.Cards.Cards.Artifacts;
 using MTG.Cards.Cards.Creatures;
 using MTG.Cards.Cards.Lands;
-using MTG.Cards.Cards.Sorceries;
 using MTG.Game.Strategies;
 
 namespace MTG.UnitTests

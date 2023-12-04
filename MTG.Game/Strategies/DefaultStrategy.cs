@@ -9,7 +9,6 @@ using MTG.Cards.Cards.Lands.Abilities;
 using MTG.Cards.Cards.Tokens;
 using MTG.Game.Utils;
 using MTG.Mana;
-using System.Reflection;
 
 namespace MTG.Game.Strategies
 {

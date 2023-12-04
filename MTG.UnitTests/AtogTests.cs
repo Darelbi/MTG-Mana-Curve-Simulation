@@ -1,6 +1,5 @@
 using MTG.Cards.Cards.Artifacts;
 using MTG.Cards.Cards.Creatures;
-using MTG.Cards.Cards.Creatures.Abilities;
 using MTG.Cards.Cards.Lands;
 using MTG.Game.Strategies;
 

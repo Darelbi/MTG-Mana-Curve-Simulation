@@ -1,6 +1,4 @@
-﻿using MTG.Cards.Cards.ManaSourcePrices;
-
-namespace MTG.Cards.Cards.Artifacts
+﻿namespace MTG.Cards.Cards.Artifacts
 {
     public class Placeholder1 : Card
     {

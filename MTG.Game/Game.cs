@@ -45,7 +45,7 @@ namespace MTG.Game
             return damageReceived;
         }
 
-        void ReceiveDamage(int damage)
+        public void ReceiveDamage(int damage)
         {
             damageReceived += damage;
         }

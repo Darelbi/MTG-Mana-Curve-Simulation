@@ -18,7 +18,7 @@ namespace MTG.UnitTests
             var game = new Game.Game(grimoire, new DefaultStrategy(), true);
             game.BeginTestGame(2);
 
-            // Turn 1, should play Ornitopher and MistvaultBridge // TODO: IMPLEMENT RUDIMENTARY PLAY STRATEGYs
+            // Turn 1, should play Ornitopher and MistvaultBridge
             game.Turn();
             Assert.IsTrue(game.PlayedCards(new SolRing(), new UrzasSaga()));
         }
