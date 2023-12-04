@@ -22,6 +22,7 @@ namespace MTG.Game
         private readonly List<Card> playedCardsThisTurn;
         private int damageDealt;
         private int playedLands;
+        private int damageReceived;
 
         private int turn;
         public Game(Grimoire grimoire, IStrategy strategy, bool meStarting)
@@ -36,6 +37,17 @@ namespace MTG.Game
             playedCardsThisTurn = new List<Card>();
             turn = 1;
             damageDealt = 0;
+            damageReceived = 0;
+        }
+
+        public int GetDamageReceived()
+        {
+            return damageReceived;
+        }
+
+        void ReceiveDamage(int damage)
+        {
+            damageReceived += damage;
         }
 
         public void Mulligan()
@@ -143,17 +155,17 @@ namespace MTG.Game
         {
             // there are no foes. So we just assume all creatures are attacking. so we don't need really any strategy for that
             var attacking = play.Where(
-                x => x.Creature 
+                x => x.Creature
                 && x.Status_Tapped == false
                 && x.Status_Weakness == false);
 
             var attacckEffects = attacking.Where(
-                x => x.AttackPhaseEffects!= null && x.AttackPhaseEffects.Count>0)
-                .Select(x => x.AttackPhaseEffects).SelectMany( x=>x).ToList();
+                x => x.AttackPhaseEffects != null && x.AttackPhaseEffects.Count > 0)
+                .Select(x => x.AttackPhaseEffects).SelectMany(x => x).ToList();
 
             effects.AddAttackPhaseEffects(attacckEffects);
 
-            foreach(var attack in attacking)
+            foreach (var attack in attacking)
             {
                 attack.Status_Attacking = true;
 
@@ -290,7 +302,7 @@ namespace MTG.Game
 
             playedCardsThisTurn.Add(card);
 
-            if(card.Sorcery || card.Instant)
+            if (card.Sorcery || card.Instant)
             {
                 var spell = (ICastEffect)card;
                 spell.CastEffect(this);
@@ -319,15 +331,15 @@ namespace MTG.Game
 
             effects.CardExitPlay(card);
 
-            if(card.EquippedTo!=null)
+            if (card.EquippedTo != null)
             {
                 card.EquippedTo.EquippedEquipment.Remove(card);
                 card.EquippedTo = null;
             }
 
-            if(card.EquippedEquipment.Any())
+            if (card.EquippedEquipment.Any())
             {
-                foreach(var item in card.EquippedEquipment)
+                foreach (var item in card.EquippedEquipment)
                 {
                     item.EquippedTo = null;
                 }
@@ -381,7 +393,7 @@ namespace MTG.Game
                 foreach (var card in toTap)
                 {
                     card.Status_Tapped = true;
-                    if(card.ManaSourcePrice!=null)
+                    if (card.ManaSourcePrice != null)
                         card.ManaSourcePrice.PayPrice(card, this);
                 }
 
@@ -421,8 +433,8 @@ namespace MTG.Game
             List<Card> toTap = new();
             var sortedSources = manaSources
                 // Pay first sources that do not have additional costs regardless if we can pay the cost
-                .Where( x => x.GetType() != typeof(UrzasSaga) || (x.GetType() == typeof(UrzasSaga) && x.LoreCounter <=1))
-                .OrderBy( x => x.GetType() == typeof(UrzasSaga))
+                .Where(x => x.GetType() != typeof(UrzasSaga) || (x.GetType() == typeof(UrzasSaga) && x.LoreCounter <= 1))
+                .OrderBy(x => x.GetType() == typeof(UrzasSaga))
                 .ThenBy(x => x.ManaSourcePrice != null)
                 .ThenByDescending(x => x.ManaSource.ConvertedManaValue())
                 .ThenBy(x => x.ManaSource.ManaComplexity()).ToList();
@@ -507,22 +519,24 @@ namespace MTG.Game
             return toTap;
         }
 
-        public void CreateColorlessLeftoverMana( int amount)
+        public void CreateColorlessLeftoverMana(int amount)
         {
             for (int i = 0; i < amount; i++)
             {
-                play.Add(new Card() { 
+                play.Add(new Card()
+                {
                     ManaSource = new Mana.Mana { Colorless = 1 },
                     Status_UntappedMana = true
                 });
             }
         }
 
-        public void CreateBlueLeftoverMana (int amount)
+        public void CreateBlueLeftoverMana(int amount)
         {
-            for(int i=0; i < amount; i++)
+            for (int i = 0; i < amount; i++)
             {
-                play.Add(new Card() {
+                play.Add(new Card()
+                {
                     ManaSource = new Mana.Mana { Blue = 1 },
                     Status_UntappedMana = true
                 });
@@ -557,7 +571,7 @@ namespace MTG.Game
                 ((IPowerFeat)card.Features[typeof(IPowerFeat)]).GetPower(card, this);
             }
 
-            foreach( var equipment in card.EquippedEquipment)
+            foreach (var equipment in card.EquippedEquipment)
             {
                 if (equipment.Features.ContainsKey(typeof(IEquippedPowerFeat)))
                 {
@@ -583,13 +597,13 @@ namespace MTG.Game
             }
             Console.WriteLine($"equipped: {equipment.CardName} to {creature.CardName}");
             creature.EquippedEquipment.Add(equipment);
-            equipment.EquippedTo=creature;
+            equipment.EquippedTo = creature;
         }
 
         public void FindCardToPlayFromDeck(Card source, Func<Card, bool> filter)
         {
             Card card = strategy.FindCardInDeck(source, filter, (IGameInteraction)this);
-            if(card!=null)
+            if (card != null)
                 PutCardInPlayFromDeck(card);
         }
 
