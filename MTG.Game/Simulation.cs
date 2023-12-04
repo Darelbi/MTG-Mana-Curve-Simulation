@@ -24,11 +24,13 @@ namespace MTG.Game
         public void Run()
         {
             int turns = 0;
+            var drawer = new RandomCardDrawer();
+            var strategy = new DefaultStrategy();
             for (int i = 0; i < games; i++)
             {
-                var grimoire = startingDeck.GetGrimoire(new RandomCardDrawer());
+                var grimoire = startingDeck.GetGrimoire(drawer);
                 turns = 0;
-                var game = new Game(grimoire, new DefaultStrategy(), i % 2 == 0);
+                var game = new Game(grimoire,strategy, i % 2 == 0);
                 game.BeginGame();
 
                 while (!game.HasWon())

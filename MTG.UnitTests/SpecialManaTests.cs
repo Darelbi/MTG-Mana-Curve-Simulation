@@ -1,11 +1,6 @@
 ﻿using MTG.Cards.Cards.Artifacts;
 using MTG.Cards.Cards.Lands;
 using MTG.Game.Strategies;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MTG.UnitTests
 {

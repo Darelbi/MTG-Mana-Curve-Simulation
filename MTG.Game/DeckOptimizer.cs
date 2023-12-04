@@ -111,7 +111,7 @@ namespace MTG.Game
         IEnumerable<(Func<Card> Added, double turn)> JustAdd()
         {
             // first simulate the deck to have a compare point 
-            var simulation = new Simulation(startingDeck, 40000);
+            var simulation = new Simulation(startingDeck, 180000);
             simulation.Run();
             double betterTurn = simulation.GetAverageWinningTurn();
 
@@ -126,14 +126,14 @@ namespace MTG.Game
                     var previousCards = startingDeck.GetCardCount(attemp);
                     startingDeck.SetCards(previousCards+1, attemp, tryList.GetFactory(attemp));
 
-                    simulation = new Simulation(startingDeck, 10000);
+                    simulation = new Simulation(startingDeck, 20000);
                     simulation.Run();
 
                     var winningTurn = simulation.GetAverageWinningTurn();
 
                     if (winningTurn < betterTurn)
                     {
-                        simulation = new Simulation(startingDeck, 25000);
+                        simulation = new Simulation(startingDeck, 150000);
                         simulation.Run();
                         winningTurn = simulation.GetAverageWinningTurn();
                         if (winningTurn < betterTurn)

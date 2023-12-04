@@ -8,7 +8,7 @@
 
         public int HowManyCanPayPrice(Card source, IGameInteraction gameInteraction)
         {
-            return (10-gameInteraction.GetDamageReceived())/2;
+            return (14-gameInteraction.GetDamageReceived())/2;
         }
 
         public void PayPrice(Card source, IGameInteraction gameInteraction)
