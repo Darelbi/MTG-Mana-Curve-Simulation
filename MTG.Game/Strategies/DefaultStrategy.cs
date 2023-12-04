@@ -48,6 +48,11 @@ namespace MTG.Game.Strategies
             if (urzaSaga.Any() && CanPlayCardsSupportSaga(interaction))
                 return urzaSaga.First();
 
+            var ancientTomb = handDuplicate.RemoveWithPredicate(x => x.GetType() == typeof(AncientTomb));
+
+            if (ancientTomb.Any())
+                return ancientTomb.First();
+
             // glimmmervoid, requires 1 artifact into play or 1 artifact that is going to be played
             // lands not counting because we can play only 1 land per turn (some cards allows playing more lands
             // but we do not see them in affinity) TODO: allow playing 2 lands per turn
@@ -273,13 +278,13 @@ namespace MTG.Game.Strategies
             || x.GetType() == typeof(MasterOfEtherium) || x.GetType() == typeof(SteelOverseer)).Count();
 
             bool urza = false;
-            if(hand.Any( x => x.GetType() == typeof(UrzasSaga)))
+            if (hand.Any(x => x.GetType() == typeof(UrzasSaga)))
             {
                 urza = mana >= 2 && creatures >= 1;
             }
 
             bool cranial = false;
-            if(hand.Any(x => x.GetType() ==typeof(CranialPlating)))
+            if (hand.Any(x => x.GetType() == typeof(CranialPlating)))
             {
                 cranial = creatures >= 2;
                 if (hand.Where(x => x.Creature).All(x => x.GetType() == typeof(MasterOfEtherium)))
@@ -289,15 +294,15 @@ namespace MTG.Game.Strategies
             }
 
             bool master = false;
-            if(hand.Any( x=> x.GetType() == typeof(MasterOfEtherium)))
+            if (hand.Any(x => x.GetType() == typeof(MasterOfEtherium)))
             {
-                master = creatures>=2 && mana>=3;
+                master = creatures >= 2 && mana >= 3;
             }
 
             bool overseer = false;
-            if(hand.Any( x=> x.GetType() == typeof(SteelOverseer)))
+            if (hand.Any(x => x.GetType() == typeof(SteelOverseer)))
             {
-                overseer = creatures >= 3 && mana>=2;
+                overseer = creatures >= 3 && mana >= 2;
             }
 
             return overseer || master || cranial || urza;
@@ -311,7 +316,7 @@ namespace MTG.Game.Strategies
             var solRing = hand.Where(x => x.GetType() == typeof(SolRing)).Count();
             var drums = hand.Where(x => x.GetType() == typeof(SpringleafDrum)).Count();
             var manaCreatures = hand.Select(x => x.GetType())
-                .Count(x => x == typeof(Ornithopter) || x == typeof(Memnite) || x== typeof(SignalPest));
+                .Count(x => x == typeof(Ornithopter) || x == typeof(Memnite) || x == typeof(SignalPest));
 
             if (lands >= 1)
                 return lands + 2 * solRing + Math.Min(drums, manaCreatures);
