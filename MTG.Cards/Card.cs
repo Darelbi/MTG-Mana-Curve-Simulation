@@ -32,6 +32,8 @@ namespace MTG.Cards
 
         // status variables
 
+
+        public bool Status_UntappedMana { get; set; } // manaleft over is kept count as temporary cards
         public bool Status_Tapped { get; set; }
         public bool Status_Weakness { get; set; }
         public bool Status_Attacking { get; set; }

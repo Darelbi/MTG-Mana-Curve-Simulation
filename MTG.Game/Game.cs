@@ -202,6 +202,13 @@ namespace MTG.Game
                 foreach (var card in selectedFreeCards)
                     PutCardInPlayFromHand(card);
             }
+
+            DestroyLeftoverMana();
+        }
+
+        private void DestroyLeftoverMana()
+        {
+            play.RemoveAll(x => x.Status_UntappedMana == true);
         }
 
         private void ActivateAbilities(bool allowedSorceries)
@@ -231,6 +238,7 @@ namespace MTG.Game
                 feat?.OnBeginPhase(card, this);
             }
 
+            DestroyLeftoverMana();
         }
 
         public List<Card> GetPlayCards()
@@ -424,8 +432,18 @@ namespace MTG.Game
                 if (sortedSources.Any(x => x.ManaSource.HaveBlue())) // why not a enum for colors? sigh
                 {
                     var card = sortedSources.First(x => x.ManaSource.HaveBlue());
+
+                    int tappedMana = card.ManaSource.ConvertedManaValue();
+                    i += tappedMana;
+
+                    if (i >= blue)
+                        CreateBlueLeftoverMana(i - blue + 1);
+
                     toTap.Add(card);
                     sortedSources.Remove(card);
+
+                    //for now implement leftover just for blue and colorless
+                    //if(card.)
                 }
                 else
                 {
@@ -479,11 +497,36 @@ namespace MTG.Game
                 int tappedMana = card.ManaSource.ConvertedManaValue();
                 i += tappedMana;
 
+                if (i >= colorless)
+                    CreateColorlessLeftoverMana(i - colorless + 1);
+
                 toTap.Add(card);
                 sortedSources.Remove(card);
             }
 
             return toTap;
+        }
+
+        public void CreateColorlessLeftoverMana( int amount)
+        {
+            for (int i = 0; i < amount; i++)
+            {
+                play.Add(new Card() { 
+                    ManaSource = new Mana.Mana { Colorless = 1 },
+                    Status_UntappedMana = true
+                });
+            }
+        }
+
+        public void CreateBlueLeftoverMana (int amount)
+        {
+            for(int i=0; i < amount; i++)
+            {
+                play.Add(new Card() {
+                    ManaSource = new Mana.Mana { Blue = 1 },
+                    Status_UntappedMana = true
+                });
+            }
         }
 
         public void TapCreatureAsCost(Card source)
