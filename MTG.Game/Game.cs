@@ -498,7 +498,7 @@ namespace MTG.Game
                 i += tappedMana;
 
                 if (i >= colorless)
-                    CreateColorlessLeftoverMana(i - colorless + 1);
+                    CreateColorlessLeftoverMana(i - colorless);
 
                 toTap.Add(card);
                 sortedSources.Remove(card);
