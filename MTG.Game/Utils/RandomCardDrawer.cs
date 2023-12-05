@@ -14,9 +14,9 @@ namespace MTG.Game.Utils
 
         public static int RandomInterval(int minInclusive, int maxExclusive )
         {
-            //return (int)Random.Shared.NextInt64(minInclusive, maxExclusive);
+            return (int)Random.Shared.NextInt64(minInclusive, maxExclusive);
 
-            return (int) XORShift() % (maxExclusive - minInclusive) + minInclusive;
+            //return (int) XORShift() % (maxExclusive - minInclusive) + minInclusive;
         }
 
         private static uint x = 548787455, y = 842502087, z = 3579807591, w = 273326509;
