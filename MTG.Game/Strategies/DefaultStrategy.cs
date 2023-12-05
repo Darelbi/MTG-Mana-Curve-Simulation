@@ -296,7 +296,8 @@ namespace MTG.Game.Strategies
             bool master = false;
             if (hand.Any(x => x.GetType() == typeof(MasterOfEtherium)))
             {
-                master = creatures >= 2 && mana >= 3;
+                bool haveBlueMana = hand.Where(x => x.GetType() == typeof(SpringleafDrum) || (x.ManaSource != null && x.ManaSource.HaveBlue())).Any();
+                master = creatures >= 2 && mana >= 3 && haveBlueMana;
             }
 
             bool overseer = false;
@@ -311,7 +312,7 @@ namespace MTG.Game.Strategies
         private int DesiredMana(List<Card> hand)
         {
             // just lands
-            var lands = hand.Where(x => x.ManaSource != null && x.Land && x.GetType() != typeof(UrzasSaga)).Count();
+            var lands = hand.Where(x => x.ManaSource != null && x.Land && x.GetType() != typeof(UrzasSaga)).Select(x => x.ManaSource.ConvertedManaValue()).Sum();
 
             var solRing = hand.Where(x => x.GetType() == typeof(SolRing)).Count();
             var drums = hand.Where(x => x.GetType() == typeof(SpringleafDrum)).Count();
