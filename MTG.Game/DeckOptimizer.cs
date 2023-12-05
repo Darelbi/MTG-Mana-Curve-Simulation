@@ -30,7 +30,7 @@ namespace MTG.Game
         {
             // first simulate the deck to have a compare point 
             var simulation = new Simulation(startingDeck, attempts);
-            simulation.Run();
+            simulation.Run().GetAwaiter().GetResult();
             double betterTurn = simulation.GetAverageWinningTurn();
 
             Type betterRemoved = null;
@@ -59,14 +59,14 @@ namespace MTG.Game
                                 , attemp, tryList.GetFactory(attemp));
 
                             simulation = new Simulation(startingDeck, 10000);
-                            simulation.Run();
+                            simulation.Run().GetAwaiter().GetResult();
 
                             var winningTurn = simulation.GetAverageWinningTurn();
 
                             if (winningTurn < betterTurn)
                             {
                                 simulation = new Simulation(startingDeck, attempts);
-                                simulation.Run();
+                                simulation.Run().GetAwaiter().GetResult();
                                 winningTurn = simulation.GetAverageWinningTurn();
                                 if (winningTurn < betterTurn)
                                 {
@@ -114,7 +114,7 @@ namespace MTG.Game
         {
             // first simulate the deck to have a compare point 
             var simulation = new Simulation(startingDeck, 180000);
-            simulation.Run();
+            simulation.Run().GetAwaiter().GetResult();
             double betterTurn = simulation.GetAverageWinningTurn();
 
             Type betterAdded = null;
@@ -129,14 +129,14 @@ namespace MTG.Game
                     startingDeck.SetCards(previousCards+1, attemp, tryList.GetFactory(attemp));
 
                     simulation = new Simulation(startingDeck, 20000);
-                    simulation.Run();
+                    simulation.Run().GetAwaiter().GetResult();
 
                     var winningTurn = simulation.GetAverageWinningTurn();
 
                     if (winningTurn < betterTurn)
                     {
                         simulation = new Simulation(startingDeck, 150000);
-                        simulation.Run();
+                        simulation.Run().GetAwaiter().GetResult();
                         winningTurn = simulation.GetAverageWinningTurn();
                         if (winningTurn < betterTurn)
                         {

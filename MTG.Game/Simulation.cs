@@ -1,5 +1,6 @@
 ﻿using MTG.Game.Strategies;
 using MTG.Game.Utils;
+using System.ComponentModel;
 
 namespace MTG.Game
 {
@@ -21,16 +22,17 @@ namespace MTG.Game
             this.winningTurn = new List<int>();
         }
 
-        public void Run()
+        public static List<int> Run(int games, Deck startingDeck)
         {
-            int turns = 0;
+            var list = new List<int>();
             var drawer = new RandomCardDrawer();
             var strategy = new DefaultStrategy();
+
             for (int i = 0; i < games; i++)
             {
                 var grimoire = startingDeck.GetGrimoire(drawer);
-                turns = 0;
-                var game = new Game(grimoire,strategy, i % 2 == 0);
+                int turns = 0;
+                var game = new Game(grimoire, strategy, i % 2 == 0);
                 game.BeginGame();
 
                 while (!game.HasWon())
@@ -39,7 +41,32 @@ namespace MTG.Game
                     game.Turn();
                 }
 
-                winningTurn.Add(turns);
+                list.Add(turns);
+            }
+
+            return list;
+        }
+
+        public async Task Run()
+        {
+            await RunInternal();
+        }
+
+        public async Task RunInternal()
+        {
+            int cpus = Environment.ProcessorCount * 2;
+            List<Task<List<int>>> tasks= new(cpus);
+
+            for(int i=0; i<cpus; i++)
+            {
+                tasks.Add(Task.Factory.StartNew(() => Run(games / cpus, startingDeck)));
+            }
+
+            var results = await Task.WhenAll(tasks);
+
+            foreach(var result in results)
+            {
+                winningTurn.AddRange(result);
             }
         }
     }
