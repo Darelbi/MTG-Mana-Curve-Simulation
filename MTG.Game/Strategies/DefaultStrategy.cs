@@ -196,15 +196,13 @@ namespace MTG.Game.Strategies
             var manaSourceThanCanBePlayedNextTurn = hand.Where(
                 x => x.ManaSource != null && x.Land && x.EntersGameTapped == false).ToList();
 
-            // TODO: play first cards that gives more mana (Sold ring etc.)
             int maxThisTurn = 0;
             if (manaSourceThanCanBePlayedThisTurn.Any())
                 maxThisTurn = manaSourceThanCanBePlayedThisTurn.Select(x => x.ManaSource.ConvertedManaValue()).Max();
 
             int maxNextTurn = 0;
             if (manaSourceThanCanBePlayedNextTurn.Any())
-                maxNextTurn = 1; // Do not know if playing the land that gives more mana is always the best strategy.
-                                 // TODO: check if I should keep into count lands that gives more than one mana.
+                maxNextTurn = manaSourceThanCanBePlayedNextTurn.Select(x => x.ManaSource.ConvertedManaValue()).Max();
 
             return maxNextTurn + maxThisTurn;
         }
