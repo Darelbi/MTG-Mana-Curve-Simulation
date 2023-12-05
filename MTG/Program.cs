@@ -35,7 +35,7 @@ trylits.AddCards(4, () => new SojournersCompanion());
 trylits.AddCards(4, () => new AncientTomb());
 
 
-DeckOptimizer optimizer = new(deck, trylits);
+DeckOptimizer optimizer = new(deck, trylits, 60000);
 optimizer.Run();
 
 //var deck2 = new Deck();

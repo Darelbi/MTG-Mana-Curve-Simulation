@@ -6,11 +6,13 @@ namespace MTG.Game
     {
         private readonly Deck startingDeck;
         private readonly Deck tryList;
+        private readonly int attempts;
 
-        public DeckOptimizer(Deck startingDeck, Deck tryList)
+        public DeckOptimizer(Deck startingDeck, Deck tryList, int attempts)
         {
             this.startingDeck = startingDeck;
             this.tryList = tryList;
+            this.attempts = attempts;
         }
 
         void PrintDeck()
@@ -27,7 +29,7 @@ namespace MTG.Game
         IEnumerable<(Func<Card> Removed, Func<Card> Added, double turn)> AllPossibilities()
         {
             // first simulate the deck to have a compare point 
-            var simulation = new Simulation(startingDeck, 40000);
+            var simulation = new Simulation(startingDeck, attempts);
             simulation.Run();
             double betterTurn = simulation.GetAverageWinningTurn();
 
@@ -63,7 +65,7 @@ namespace MTG.Game
 
                             if (winningTurn < betterTurn)
                             {
-                                simulation = new Simulation(startingDeck, 25000);
+                                simulation = new Simulation(startingDeck, attempts);
                                 simulation.Run();
                                 winningTurn = simulation.GetAverageWinningTurn();
                                 if (winningTurn < betterTurn)

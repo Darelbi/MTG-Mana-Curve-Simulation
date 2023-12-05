@@ -1,5 +1,6 @@
 using MTG.Cards.Cards.Creatures;
 using MTG.Cards.Cards.Lands;
+using MTG.Cards.Cards.Tokens;
 using MTG.Game.Strategies;
 
 namespace MTG.UnitTests
@@ -69,6 +70,29 @@ namespace MTG.UnitTests
             // Turn 1
             game.Turn();
             Assert.IsTrue(game.PlayedCards(new Ornithopter(), new Glimmervoid()));
+        }
+
+        [TestMethod]
+        public void AncientTombEnablesUrzasSaga()
+        {
+            var grimoire =
+            TestUtils.SetupDeck(new AncientTomb(),
+                                new UrzasSaga(),
+
+                                new Ornithopter()
+                                );
+
+            var game = new Game.Game(grimoire, new DefaultStrategy(), true);
+            game.BeginTestGame(2);
+
+            // Turn 1
+            game.Turn();
+            Assert.IsTrue(game.PlayedCards(new UrzasSaga()));
+
+            // Turn 2
+            game.Turn();
+            Assert.IsTrue(game.PlayedCards(new AncientTomb(), new Ornithopter()));
+            Assert.IsTrue(game.CheckCardsInPlay(new Construct()));
         }
 
     }
