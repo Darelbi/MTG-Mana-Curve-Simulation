@@ -32,9 +32,10 @@ trylits.AddCards(4, () => new Thoughtcast());
 trylits.AddCards(1, () => new LotusPetal());
 trylits.AddCards(4, () => new SojournersCompanion());
 trylits.AddCards(4, () => new AncientTomb());
+trylits.AddCards(1, () => new TolarianAcademy());
 
 
-DeckOptimizer optimizer = new(deck, trylits, 60000);
+DeckOptimizer optimizer = new(deck, trylits, 80000);
 optimizer.Run();
 
 //var deck2 = new Deck();
