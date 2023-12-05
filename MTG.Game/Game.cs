@@ -85,6 +85,7 @@ namespace MTG.Game
             int toDraw = 7;
             Draw(toDraw);
 
+            RecomputePotentialDynamicMana(); // otherwise we don't mulligan correctly the tolarian academy
             while (strategy.ShouldMulligan(hand) && toDraw > 4)
             {
                 Mulligan();
