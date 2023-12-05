@@ -95,5 +95,34 @@ namespace MTG.UnitTests
             Assert.IsTrue(game.CheckCardsInPlay(new Construct()));
         }
 
+        [TestMethod]
+        public void TestTolarianAcademy()
+        {
+            var grimoire =
+            TestUtils.SetupDeck(new TolarianAcademy(),
+                                new Ornithopter(),
+                                new Ornithopter(),
+                                new Frogmite(),
+
+                                new MasterOfEtherium()
+                                );
+
+            var game = new Game.Game(grimoire, new DefaultStrategy(), true);
+            game.BeginTestGame(4);
+
+            // Turn 1
+            game.Turn();
+            Assert.IsTrue(game.PlayedCards(
+                            new TolarianAcademy(),
+                                new Ornithopter(),
+                                new Ornithopter(),
+                                new Frogmite()));
+
+            // Turn 2
+            game.Turn();
+            Assert.IsTrue(game.PlayedCards(
+                            new MasterOfEtherium()));
+        }
+
     }
 }

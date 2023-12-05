@@ -37,6 +37,8 @@ namespace MTG.Game.Strategies
 
         private Card SelectLandToPlay(List<Card> handDuplicate, IGameInteraction interaction)
         {
+            interaction.RecomputePotentialDynamicMana();
+
             // select all possible lands to play
             var manaLands = handDuplicate.RemoveWithPredicate(x =>
                  x.Land && x.ManaSource != null && x.ManaSource.ConvertedManaValue() > 0);
@@ -48,7 +50,22 @@ namespace MTG.Game.Strategies
             if (urzaSaga.Any() && CanPlayCardsSupportSaga(interaction))
                 return urzaSaga.First();
 
+            var academy = handDuplicate.RemoveWithPredicate(x => x.GetType() == typeof(TolarianAcademy));
+
             var ancientTomb = handDuplicate.RemoveWithPredicate(x => x.GetType() == typeof(AncientTomb));
+
+            if (academy.Any() && ancientTomb.Any())
+            {
+                var firstAcademy = academy.First();
+                var firstTomb = ancientTomb.First();
+
+                if (firstAcademy.ManaSource.ConvertedManaValue() >= firstTomb.ManaSource.ConvertedManaValue())
+                    return firstAcademy;
+                return firstTomb;
+            }
+
+            if (academy.Any() && academy.First().ManaSource.ConvertedManaValue()>0)
+                return academy.First();
 
             if (ancientTomb.Any())
                 return ancientTomb.First();

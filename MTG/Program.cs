@@ -3,7 +3,6 @@ using MTG.Cards.Cards.Creatures;
 using MTG.Cards.Cards.Lands;
 using MTG.Cards.Cards.Sorceries;
 using MTG.Game;
-using MTG.Game.Strategies;
 
 var deck = new Deck();
 var trylits = new Deck();

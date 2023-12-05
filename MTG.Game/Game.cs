@@ -179,6 +179,38 @@ namespace MTG.Game
             effects.RemoveAttackPhaseEffects(attacckEffects);
         }
 
+        public void RecomputeDynamicMana()
+        {
+            var affectedCards = GetHandCards().Concat(GetPlayCards());
+
+            foreach (var card in affectedCards)
+            {
+                if (card != null)
+                {
+                    if(card.Features.ContainsKey(typeof(IDynamicManaValue)))
+                    {
+                        ((IDynamicManaValue)card.Features[typeof(IDynamicManaValue)]).ActualManaVaule(card, this);
+                    }
+                }
+            }
+        }
+
+        public void RecomputePotentialDynamicMana()
+        {
+            var affectedCards = GetHandCards().Concat(GetPlayCards());
+
+            foreach (var card in affectedCards)
+            {
+                if (card != null)
+                {
+                    if (card.Features.ContainsKey(typeof(IDynamicManaValue)))
+                    {
+                        ((IDynamicManaValue)card.Features[typeof(IDynamicManaValue)]).PotentialManaValue(card, this);
+                    }
+                }
+            }
+        }
+
         private void MainPhase()
         {
             var selectedFreeCards = strategy.SelectManaAndFreeCardsToPlay(this);
@@ -379,6 +411,7 @@ namespace MTG.Game
 
         private bool TapMana(Mana.Mana manaCost, bool excludingCardIsBeingTappedAndCantBeSelected, Card exclude, bool affinity)
         {
+            RecomputeDynamicMana();
             List<Card> manaSources = null;
 
             if (excludingCardIsBeingTappedAndCantBeSelected)
@@ -449,7 +482,7 @@ namespace MTG.Game
                     i += tappedMana;
 
                     if (i >= blue)
-                        CreateBlueLeftoverMana(i - blue + 1);
+                        sortedSources.AddRange(CreateBlueLeftoverMana(i - blue));
 
                     toTap.Add(card);
                     sortedSources.Remove(card);
@@ -519,28 +552,42 @@ namespace MTG.Game
             return toTap;
         }
 
-        public void CreateColorlessLeftoverMana(int amount)
+        public List<Card> CreateColorlessLeftoverMana(int amount)
         {
+            var cards = new List<Card>();
+
             for (int i = 0; i < amount; i++)
             {
-                play.Add(new Card()
+                var card = new Card()
                 {
                     ManaSource = new Mana.Mana { Colorless = 1 },
                     Status_UntappedMana = true
-                });
+                };
+
+                cards.Add(card);
+                play.Add(card);
             }
+
+            return cards;
         }
 
-        public void CreateBlueLeftoverMana(int amount)
+        public List<Card> CreateBlueLeftoverMana(int amount)
         {
+            var cards = new List<Card>();
+
             for (int i = 0; i < amount; i++)
             {
-                play.Add(new Card()
+                var card = new Card()
                 {
                     ManaSource = new Mana.Mana { Blue = 1 },
                     Status_UntappedMana = true
-                });
+                };
+
+                cards.Add(card);
+                play.Add(card);
             }
+
+            return cards;
         }
 
         public void TapCreatureAsCost(Card source)
