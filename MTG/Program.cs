@@ -35,7 +35,7 @@ trylits.AddCards(4, () => new AncientTomb());
 trylits.AddCards(1, () => new TolarianAcademy());
 
 
-DeckOptimizer optimizer = new(deck, trylits, 80000);
+DeckOptimizer optimizer = new(deck, trylits, 10000000);
 optimizer.Run();
 
 //var deck2 = new Deck();
