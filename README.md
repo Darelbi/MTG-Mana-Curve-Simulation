@@ -117,8 +117,42 @@ into account "controlling" effects. But this is the starting mana curve base.
  - 4    x Glimmervoid
  - 5    x Island
  
- **This deck is better by a 3.5% margin. With an AWT (Average winning turn) of 4,90**
- (so a decent number of games is won at turn 4).
+## The Vintage Prototype
+
+I know there should be added also Moxes but the optimizer improved the deck further by adding
+Tolarian Academy and Ancient tomb. There was some debate whethever the Ancient Tomb should
+be added to affinity. The simulation removes all the doubts: Ancient tomb makes an improvement
+but by a very small margin
+
+**Creatures (28)**
+
+ - 4    x Ornithopter
+ - 4    x Memnite
+ - 1    x Thought Monitor
+ - 3    x Sojourner's Companion
+ - 4    x Master of Etherium
+ - 4    x Frogmite
+ - 4    x Signal Pest
+ - 4    x Steel Overseer
+
+**Artifacts (10)**
+
+ - 4    x Cranial Plating
+ - 4    x Springleaf Drum
+ - 1    x Sol Ring
+ - 1    x Lotus Petal
+
+ **Lands (22)**
+
+ - 4    x Urza's Saga
+ - 4    x Vault of Whispers
+ - 4    x Seat of the Synod
+ - 4    x Darksteel Citadel
+ - 1    x Island
+ - 1    x Tolarian Academy
+ - 4    x Ancient Tomb
+
+ **This deck is better by a 1.2% margin over the last version With an AWT of 4,839**
  
  ## The sideboard consideration
  

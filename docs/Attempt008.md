@@ -1,1 +1,0 @@
-Letting a simulation with 10 millions games run overnight to find optimal deck with expensive cards

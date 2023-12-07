@@ -283,6 +283,7 @@ namespace MTG.Game.Strategies
 
         private bool HaveDesiredCardsNew(List<Card> hand)
         {
+
             //for combo decks mulligan choice is pretty simple
             // just check there are certain combinations of card
             // in affinity we just want 2 or 3 lands and one power combination
