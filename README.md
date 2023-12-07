@@ -86,7 +86,7 @@ into account "controlling" effects. But this is the starting mana curve base.
  - 4    x Glimmervoid
  - 4    x Island
  
- ## The improved results
+ ## The improved results (Casual deck)
  
  After tayloring the deck I taylored the strategy (mostly improving the mulligan), 
  after that I re-runned the deck optimization and I found this one, slightly different
@@ -122,7 +122,8 @@ into account "controlling" effects. But this is the starting mana curve base.
 I know there should be added also Moxes but the optimizer improved the deck further by adding
 Tolarian Academy and Ancient tomb. There was some debate whethever the Ancient Tomb should
 be added to affinity. The simulation removes all the doubts: Ancient tomb makes an improvement
-but by a very small margin
+but by a very small margin. Also note that this deck was tested with
+10 millions simulations for each Card Swap (so it took 30 hours to be generated)
 
 **Creatures (28)**
 
@@ -154,7 +155,7 @@ but by a very small margin
 
  **This deck is better by a 1.2% margin over the last version With an AWT of 4,839**
  
- ## The sideboard consideration
+ ## The sideboard consideration (for Casual deck)
  
  Swapping out cards for sideboard, makes the deck worse. However we need the Sideboard
  so I tried to figure out how many cards we can swap out. Let's it: I runned the deck
