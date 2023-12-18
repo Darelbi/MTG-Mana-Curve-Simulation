@@ -6,11 +6,13 @@ namespace MTG.Game
     {
         private readonly Deck startingDeck;
         private readonly Deck tryList;
+        private readonly int simulations;
 
-        public DeckSideboardFinder(Deck startingDeck, Deck tryList)
+        public DeckSideboardFinder(Deck startingDeck, Deck tryList, int simulations)
         {
             this.startingDeck = startingDeck;
             this.tryList = tryList;
+            this.simulations = simulations;
         }
 
         void PrintDeck()
@@ -27,8 +29,8 @@ namespace MTG.Game
         IEnumerable<(Func<Card> Removed, Func<Card> Added, double turn)> AllPossibilities()
         {
             // first simulate the deck to have a compare point 
-            var simulation = new Simulation(startingDeck, 40000);
-            simulation.Run();
+            var simulation = new Simulation(startingDeck, simulations);
+            simulation.Run().GetAwaiter().GetResult();
 
             double lowerBound = simulation.GetAverageWinningTurn();
             double upperBound = double.MaxValue;
@@ -58,8 +60,8 @@ namespace MTG.Game
                                 startingDeck.GetCardCount(attemp) + 1
                                 , attemp, tryList.GetFactory(attemp));
 
-                            simulation = new Simulation(startingDeck, 30000);
-                            simulation.Run();
+                            simulation = new Simulation(startingDeck, simulations);
+                            simulation.Run().GetAwaiter().GetResult();
 
                             var winningTurn = simulation.GetAverageWinningTurn();
 
@@ -110,7 +112,7 @@ namespace MTG.Game
 
         public void Run()
         {
-            Console.WriteLine("Starting Optimization: with initial deck\n");
+            Console.WriteLine("Finding sideboard: with initial deck\n");
             PrintDeck();
             Console.WriteLine("");
 
@@ -128,7 +130,7 @@ namespace MTG.Game
 
             Console.SetOut(standardOutput);
             Console.WriteLine("");
-            Console.WriteLine("Ended Optimization: with final deck\n");
+            Console.WriteLine("Found sideboard: with final deck\n");
             PrintDeck();
             Console.WriteLine("");
         }

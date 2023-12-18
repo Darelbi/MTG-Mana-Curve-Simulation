@@ -187,7 +187,7 @@ namespace MTG
             var sideBoardFind = new Deck();
             sideBoardFind.AddCards(10, () => new Placeholder1());
 
-            DeckSideboardFinder deckSideboardFinder = new(fourthDeck, sideBoardFind);
+            DeckSideboardFinder deckSideboardFinder = new(fourthDeck, sideBoardFind, 50000);
             deckSideboardFinder.Run();
         }
     }

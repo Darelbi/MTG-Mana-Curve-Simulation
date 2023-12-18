@@ -1,6 +1,5 @@
 ﻿using MTG.Cards.Cards.ActivatedAbilities;
 using MTG.Cards.Cards.Effects;
-using MTG.Cards.Cards.Feats;
 using System.Collections.ObjectModel;
 
 namespace MTG.Cards

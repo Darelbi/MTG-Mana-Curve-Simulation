@@ -122,6 +122,8 @@ namespace MTG.Game
 
             // begin turn phase
             UntapPhase(); // TODO: lore counting is done after drawing.... does not matter for now.
+
+            UpkeepPhase();
             Draw();
 
             MainPhase();
@@ -134,6 +136,12 @@ namespace MTG.Game
 
 
             turn++;
+        }
+
+        private void UpkeepPhase()
+        {
+            foreach (var card in play)
+                card.Upkeep?.PayUpkeep(card, this);
         }
 
         private void EndPhase()
@@ -271,7 +279,8 @@ namespace MTG.Game
 
             foreach (var card in play.ToList())
             {
-                card.Status_Tapped = false;
+                if(card.DontUntap == false)
+                    card.Status_Tapped = false;
                 card.Status_Weakness = false;
             }
 

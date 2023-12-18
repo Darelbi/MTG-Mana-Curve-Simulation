@@ -2,6 +2,7 @@
 using MTG.Cards.Cards.Effects;
 using MTG.Cards.Cards.Feats;
 using MTG.Cards.Cards.ManaSourcePrices;
+using MTG.Cards.Cards.Upkeeps;
 
 namespace MTG.Cards
 {
@@ -13,9 +14,12 @@ namespace MTG.Cards
         public Mana.Mana? ManaSource { get; set; }
 
         public IManaSourcePrices ManaSourcePrice { get; set; }
+
+        public IUpkeepPrice Upkeep { get; set; }
         public int Toughness { get; set; }
         public int Power { get; set; }
         public bool EntersGameTapped { get; set; } 
+        public bool DontUntap { get; set; }
         public bool Land { get; set; }
         public bool Enchantment { get; set; }
         public bool Creature { get; set; }

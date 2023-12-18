@@ -7,6 +7,8 @@ using MTG.Game;
 var deck = new Deck();
 var trylits = new Deck();
 
+// OLD VERSION OF POWER DECK
+
 deck.AddCards(4, () => new Ornithopter());
 deck.AddCards(4, () => new Memnite());
 deck.AddCards(1, () => new ThoughtMonitor());
@@ -20,72 +22,34 @@ deck.AddCards(4, () => new SpringleafDrum());
 deck.AddCards(1, () => new SolRing());
 
 deck.AddCards(4, () => new UrzasSaga());
-deck.AddCards(1, () => new GreatFurnace());
+deck.AddCards(3, () => new SojournersCompanion());
 deck.AddCards(4, () => new VaultOfWhispers());
 deck.AddCards(4, () => new SeatOfTheSynod());
 deck.AddCards(4, () => new DarksteelCitadel());
-deck.AddCards(4, () => new Glimmervoid());
-deck.AddCards(5, () => new Island());
+deck.AddCards(1, () => new Island());
+deck.AddCards(1, () => new TolarianAcademy());
+deck.AddCards(4, () => new AncientTomb());
+deck.AddCards(1, () => new LotusPetal());
+
+// NEWLY IMPLEMENTED CARDS
 
 trylits.AddCards(3, () => new ThoughtMonitor());
+trylits.AddCards(1, () => new SojournersCompanion());
 trylits.AddCards(4, () => new Thoughtcast());
-trylits.AddCards(1, () => new LotusPetal());
-trylits.AddCards(4, () => new SojournersCompanion());
-trylits.AddCards(4, () => new AncientTomb());
-trylits.AddCards(1, () => new TolarianAcademy());
+trylits.AddCards(1, () => new ManaVault());
+trylits.AddCards(1, () => new ManaCrypt());
 
 
-DeckOptimizer optimizer = new(deck, trylits, 10000000);
+DeckOptimizer optimizer = new(deck, trylits, 300000);
 optimizer.Run();
 
-//var deck2 = new Deck();
-//var deck3 = new Deck();
+/// FIND SIDEBOARD FOR MY DECK
+/// 
 
-//deck2.AddCards(4, () => new Ornithopter());
-//deck2.AddCards(4, () => new Memnite());
-//deck2.AddCards(4, () => new ThoughtMonitor());
-//deck2.AddCards(4, () => new MasterOfEtherium());
-//deck2.AddCards(4, () => new Frogmite());
-//deck2.AddCards(4, () => new SignalPest());
-//deck2.AddCards(3, () => new SteelOverseer());
+var sideboard = new Deck();
 
-//deck2.AddCards(4, () => new CranialPlating());
-//deck2.AddCards(2, () => new SpringleafDrum());
-//deck2.AddCards(1, () => new SolRing());
+sideboard.AddCards(8, () => new ArtifactPlaceholder1());
 
-//deck2.AddCards(4, () => new UrzasSaga());
-//deck2.AddCards(1, () => new GreatFurnace());
-//deck2.AddCards(4, () => new VaultOfWhispers());
-//deck2.AddCards(4, () => new SeatOfTheSynod());
-//deck2.AddCards(4, () => new DarksteelCitadel());
-//deck2.AddCards(4, () => new Glimmervoid());
-//deck2.AddCards(5, () => new Island());
+var sideboardfinder = new DeckSideboardFinder(deck, sideboard, 300000);
+sideboardfinder.Run();
 
-
-
-//deck3.AddCards(4, () => new Ornithopter());
-//deck3.AddCards(4, () => new Memnite());
-//deck3.AddCards(4, () => new ThoughtMonitor());
-//deck3.AddCards(4, () => new MasterOfEtherium());
-//deck3.AddCards(3, () => new Frogmite());
-//deck3.AddCards(4, () => new SignalPest());
-//deck3.AddCards(4, () => new SteelOverseer());
-
-//deck3.AddCards(4, () => new CranialPlating());
-//deck3.AddCards(2, () => new SpringleafDrum());
-//deck3.AddCards(1, () => new SolRing());
-
-//deck3.AddCards(4, () => new UrzasSaga());
-//deck3.AddCards(1, () => new GreatFurnace());
-//deck3.AddCards(3, () => new VaultOfWhispers());
-//deck3.AddCards(4, () => new SeatOfTheSynod());
-//deck3.AddCards(4, () => new DarksteelCitadel());
-//deck3.AddCards(3, () => new Glimmervoid());
-//deck3.AddCards(5, () => new Island());
-//deck3.AddCards(1, () => new LotusPetal());
-//deck3.AddCards(1, () => new AncientTomb());
-
-
-//var comparison2 = new CompareTwoDecks(
-//    deck2
-//    , deck3, () => StrategyVariables.OldMulligan = false, () => StrategyVariables.OldMulligan = false);

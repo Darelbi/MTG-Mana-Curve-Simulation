@@ -471,6 +471,10 @@ namespace MTG.Game.Strategies
             var cardsInPlay = gameInteraction.GetPlayCards();
             var cardsInHand = gameInteraction.GetHandCards();
 
+            // prioritize Mana Vault
+            if (cardsInHand.Where(x => x.GetType() == typeof(ManaVault)).Any())
+                cardsToPlay.Add(cardsInHand.First(x => x.GetType() == typeof(ManaVault)));
+
             // prioritize sol ring
             if (cardsInHand.Where(x => x.GetType() == typeof(SolRing)).Any())
                 cardsToPlay.Add(cardsInHand.First(x => x.GetType() == typeof(SolRing)));

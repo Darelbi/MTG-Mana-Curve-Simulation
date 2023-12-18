@@ -56,3 +56,42 @@ Ended Optimization: with final deck
  - 4    x Ancient Tomb
  - 3    x Sojourner's Companion
 Total: 60 Total Cards
+
+
+ATTEMP 2:
+
+
+
+ - Removed: Glimmervoid, Added:Tolarian Academy (AWT: 4,885443)
+ - Removed: Island, Added:Thought Monitor (AWT: 4,880114)
+ - Removed: Island, Added:Ancient Tomb (AWT: 4,87836)
+ - Removed: Glimmervoid, Added:Ancient Tomb (AWT: 4,871253)
+ - Removed: Island, Added:Lotus Petal (AWT: 4,867306)
+ - Removed: Island, Added:Ancient Tomb (AWT: 4,860515)
+ - Removed: Great Furnace, Added:Ancient Tomb (AWT: 4,854421)
+ - Removed: Glimmervoid, Added:Sojourner's Companion (AWT: 4,847256)
+ - Removed: Thought Monitor, Added:Sojourner's Companion (AWT: 4,844811)
+ - Removed: Glimmervoid, Added:Sojourner's Companion (AWT: 4,841625)
+
+Ended Optimization: with final deck
+
+ - 4    x Ornithopter
+ - 4    x Memnite
+ - 1    x Thought Monitor
+ - 4    x Master of Etherium
+ - 4    x Frogmite
+ - 4    x Signal Pest
+ - 4    x Steel Overseer
+ - 4    x Cranial Plating
+ - 4    x Springleaf Drum
+ - 1    x Sol Ring
+ - 4    x Urza's Saga
+ - 3    x Sojourner's Companion
+ - 4    x Vault of Whispers
+ - 4    x Seat of the Synod
+ - 4    x Darksteel Citadel
+ - 1    x Island
+ - 1    x Tolarian Academy
+ - 4    x Ancient Tomb
+ - 1    x Lotus Petal
+Total: 60 Total Cards
