@@ -196,7 +196,7 @@ namespace MTG.Game
             {
                 if (card != null)
                 {
-                    if(card.Features.ContainsKey(typeof(IDynamicManaValue)))
+                    if (card.Features.ContainsKey(typeof(IDynamicManaValue)))
                     {
                         ((IDynamicManaValue)card.Features[typeof(IDynamicManaValue)]).ActualManaVaule(card, this);
                     }
@@ -279,7 +279,7 @@ namespace MTG.Game
 
             foreach (var card in play.ToList())
             {
-                if(card.DontUntap == false)
+                if (card.DontUntap == false)
                     card.Status_Tapped = false;
                 card.Status_Weakness = false;
             }
@@ -449,29 +449,35 @@ namespace MTG.Game
         // TODO: this can be improved a lot
         private List<Card> FindCardsToTap(Mana.Mana manaCost, bool affinity, List<Card> manaSources)
         {
+            if (manaSources == null)
+                throw new System.ArgumentException("manaSources null expected at least a empty list");
+
             var cardsWithAdditionalCostsGroups = manaSources.Where(x => x.ManaSourcePrice != null && x.Status_Tapped == false)
                 .GroupBy(x => x.ManaSourcePrice.GetType());
 
-            foreach (var group in cardsWithAdditionalCostsGroups)
-            {
-                // this is stupid. but better than nothing. TODO: There's nothing that can be done easily for that
-                // basically group SourcePrice by type, ASSUMING DIFFERENT TYPES HAVE DIFFERENT KIND OF COSTS (WHICH IS NOT TRUE FOR ALL CARDS, TODO)
-                // for each group we count how many costs can be payed, this is selected by strategy with game as proxy.
-                // cards that exceed the ammissible cost are removed from mana sources.
-                var cardsInGroup = group.ToList();
-                var first = cardsInGroup.First();
-                int pricesCanPay = first.ManaSourcePrice.HowManyCanPayPrice(first, this);
-                int toRemove = cardsInGroup.Count() - pricesCanPay;
-                if (toRemove < 0)
-                {
-                    toRemove = 0;
-                }
+            if (cardsWithAdditionalCostsGroups != null)
 
-                foreach (var cardToRemove in cardsInGroup.GetRange(0, toRemove))
+                foreach (var group in cardsWithAdditionalCostsGroups)
                 {
-                    manaSources.Remove(cardToRemove);
+                    // this is stupid. but better than nothing. TODO: There's nothing that can be done easily for that
+                    // basically group SourcePrice by type, ASSUMING DIFFERENT TYPES HAVE DIFFERENT KIND OF COSTS (WHICH IS NOT TRUE FOR ALL CARDS, TODO)
+                    // for each group we count how many costs can be payed, this is selected by strategy with game as proxy.
+                    // cards that exceed the ammissible cost are removed from mana sources.
+                    var cardsInGroup = group.ToList();
+                    var first = cardsInGroup.First();
+                    int pricesCanPay = first.ManaSourcePrice.HowManyCanPayPrice(first, this);
+                    int toRemove = cardsInGroup.Count() - pricesCanPay;
+                    if (toRemove < 0)
+                    {
+                        toRemove = 0;
+                    }
+
+                    if (toRemove > 0 && toRemove <= cardsInGroup.Count)
+                        foreach (var cardToRemove in cardsInGroup.GetRange(0, toRemove))
+                        {
+                            manaSources.Remove(cardToRemove);
+                        }
                 }
-            }
 
             List<Card> toTap = new();
             var sortedSources = manaSources
